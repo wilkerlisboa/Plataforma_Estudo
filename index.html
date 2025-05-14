@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma de Estudo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .sidebar {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      padding: 48px 0 0;
+      box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+      background-color: #f8f9fa;
+    }
+    
+    .sidebar-sticky {
+      position: relative;
+      top: 0;
+      height: calc(100vh - 48px);
+      padding-top: .5rem;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .main-content {
+      margin-left: 240px;
+      padding: 2rem;
+    }
+
+    .nav-link {
+      color: #333;
+      padding: 0.5rem 1rem;
+    }
+
+    .nav-link:hover {
+      background-color: #e9ecef;
+    }
+
+    .nav-link.active {
+      color: #0d6efd;
+      background-color: #e9ecef;
+    }
+
+    .status-aprovado {
+      background-color: #198754 !important;
+      color: white !important;
+    }
+
+    .status-reprovado {
+      background-color: #dc3545 !important;
+      color: white !important;
+    }
+
+    .chart-container {
+      width: 100%;
+      max-width: 700px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <!-- Menu Lateral -->
+  <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+    <div class="sidebar-sticky">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link active" href="#" data-secao="dashboard">
+            <i class="bi bi-speedometer2"></i> Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-secao="provas">
+            <i class="bi bi-file-text"></i> Provas
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-secao="autor">
+            <i class="bi bi-person"></i> Autor
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-content">
+    <!-- Dashboard -->
+    <div id="dashboard" class="secao">
+      <h1 class="text-center mb-4">Dashboard</h1>
+      
+      <!-- Botões de Estudo -->
+      <div class="mb-4">
+        <div class="row justify-content-center">
+          <!-- Select de Matéria -->
+          <div class="col-md-6 mb-3">
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="bi bi-book"></i>
+              </span>
+              <select class="form-select" id="studySubject">
+                <option value="">Selecione a matéria</option>
+                <option value="Português">Português</option>
+                <option value="Matemática">Matemática</option>
+                <option value="História">História</option>
+                <option value="Geografia">Geografia</option>
+                <option value="Física">Física</option>
+                <option value="Química">Química</option>
+                <option value="Biologia">Biologia</option>
+                <option value="Inglês">Inglês</option>
+                <option value="Redação">Redação</option>
+                <option value="Redação">legislação</option>
+                <option value="Redação">Direito Administrativo</option>
+                <option value="Redação">Direito Penal</option>
+                <option value="Redação">Direito Penal Processual</option>
+                <option value="Redação">Direito Constitucional</option>
+                <option value="Redação">Conhecimento Especifico</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input para nova matéria (inicialmente oculto) -->
+        <div class="row justify-content-center" id="novaMateriaContainer" style="display: none;">
+          <div class="col-md-6 mb-3">
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="bi bi-plus-circle"></i>
+              </span>
+              <input type="text" class="form-control" id="novaMateria" placeholder="Digite o nome da nova matéria">
+              <button class="btn btn-secondary" onclick="adicionarNovaMateria()">
+                <i class="bi bi-plus"></i> Adicionar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões em baixo um do outro -->
+        <div class="row justify-content-center">
+          <div class="col-md-6 mb-2">
+            <button class="btn btn-primary w-100" onclick="registrarEstudo('video')">
+              <i class="bi bi-camera-video"></i> Estudei por Vídeo Aula
+            </button>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-6 mb-2">
+            <button class="btn btn-success w-100" onclick="registrarEstudo('questoes')">
+              <i class="bi bi-list-check"></i> Estudei por Questões
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico de Estudo -->
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="card-title mb-0">Histórico de Estudos</h3>
+                <button class="btn btn-outline-danger btn-sm" onclick="limparGrafico()" title="Limpar histórico">
+                  <i class="bi bi-trash"></i> Limpar Histórico
+                </button>
+              </div>
+              <div class="chart-container">
+                <canvas id="studyChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção de Provas -->
+    <div id="provas" class="secao" style="display: none;">
+      <h1 class="text-center mb-4">Gerenciamento de Provas</h1>
+      
+      <!-- Formulário de Prova -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="card-title text-center mb-4">Registrar Nova Prova</h3>
+          <form id="examForm" class="row g-3 justify-content-center">
+            <div class="col-md-3">
+              <label class="form-label">Data da Prova</label>
+              <input type="date" class="form-control" id="examDate" required>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Prova</label>
+              <input type="text" class="form-control" id="examSubject" placeholder="Digite o nome da prova" required>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Nota</label>
+              <input type="number" class="form-control" id="examScore" placeholder="Nota" required>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Status</label>
+              <select class="form-select" id="examPassed">
+                <option value="Sim">Aprovado</option>
+                <option value="Não">Reprovado</option>
+              </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-save"></i> Salvar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Lista de Provas -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h3 class="card-title text-center mb-4">Provas Realizadas</h3>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th class="text-center">Data</th>
+                  <th>Prova</th>
+                  <th class="text-center">Nota</th>
+                  <th class="text-center">Status</th>
+                  <th class="text-center">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="examTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção Autor -->
+    <div id="autor" class="secao" style="display: none;">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h1 class="card-title mb-4">Wilker Lisboa</h1>
+              
+              <div class="text-start mb-4">
+                <p class="lead">
+                    Olá! Meu nome é Wilker Lisboa e sou o desenvolvedor desta plataforma de estudos. 
+                    Sou apaixonado por tecnologia e educação, e criei esta ferramenta tanto para ajudar 
+                    outros estudantes quanto para meu uso pessoal, como uma forma de organizar melhor meus 
+                    próprios estudos e acompanhar meu progresso.
+                </p>
+
+                <p class="lead">
+                    Com experiência em desenvolvimento web e uma forte base em metodologias de estudo, desenvolvi 
+                    esta plataforma pensando em tornar o processo de aprendizado mais eficiente e organizado. 
+                    Utilizo ela diariamente nos meus estudos, pois acredito que com as ferramentas certas e um bom 
+                    planejamento, qualquer pessoa — inclusive eu — pode alcançar seus objetivos acadêmicos.
+                </p>
+
+                <p class="lead">
+                    Esta plataforma é resultado de muito estudo e dedicação, e espero que ela possa ajudar você em 
+                    sua jornada de aprendizado assim como tem me ajudado. Estou sempre aberto a sugestões e feedbacks 
+                    para melhorar ainda mais a experiência dos usuários. 
+                </p>
+              </div>
+
+              <a href="https://www.instagram.com/wilkerlisboa_" 
+                 class="btn btn-primary btn-lg" 
+                 target="_blank"
+                 style="background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);">
+                <i class="bi bi-instagram"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Variáveis globais
+    let chartData = JSON.parse(localStorage.getItem('estudos')) || [];
+    let provas = JSON.parse(localStorage.getItem('provas')) || [];
+    let studyChart = null;
+
+    // Função para carregar as provas
+    function carregarProvas() {
+      const tbody = document.getElementById('examTableBody');
+      if (!tbody) return;
+      
+      tbody.innerHTML = '';
+      provas.forEach((p, index) => {
+        const statusClass = p.aprovado === 'Sim' ? 'bg-success' : 'bg-danger';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="text-center">${formatarData(p.data)}</td>
+          <td>${p.materia}</td>
+          <td class="text-center fw-bold">${p.nota}</td>
+          <td class="text-center">
+            <span class="badge ${statusClass} px-3 py-2">
+              ${p.aprovado === 'Sim' ? 'Aprovado' : 'Reprovado'}
+            </span>
+          </td>
+          <td class="text-center">
+            <button class="btn btn-outline-danger btn-sm" onclick="excluirProva(${index})" title="Excluir prova">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function formatarData(data) {
+      const [ano, mes, dia] = data.split('-');
+      return `${dia}/${mes}/${ano}`;
+    }
+
+    function excluirProva(index) {
+      if (confirm('Tem certeza que deseja excluir esta prova?')) {
+        provas.splice(index, 1);
+        localStorage.setItem('provas', JSON.stringify(provas));
+        carregarProvas();
+      }
+    }
+
+    function mostrarSecao(secao) {
+      document.querySelectorAll('.secao').forEach(s => s.style.display = 'none');
+      document.getElementById(secao).style.display = 'block';
+      
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('data-secao') === secao) {
+          link.classList.add('active');
+        }
+      });
+
+      if (secao === 'dashboard') {
+        criarOuAtualizarGrafico();
+      } else if (secao === 'provas') {
+        carregarProvas();
+      } else if (secao === 'autor') {
+        // Implemente a lógica para mostrar a seção do autor
+      }
+    }
+
+    function criarOuAtualizarGrafico() {
+      const ctx = document.getElementById('studyChart');
+      if (!ctx) return;
+      const dadosPorMateria = {};
+
+      chartData.forEach(estudo => {
+        if (!dadosPorMateria[estudo.materia]) {
+          dadosPorMateria[estudo.materia] = {};
+        }
+        if (!dadosPorMateria[estudo.materia][estudo.data]) {
+          dadosPorMateria[estudo.materia][estudo.data] = {
+            video: 0,
+            questoes: 0
+          };
+        }
+        dadosPorMateria[estudo.materia][estudo.data][estudo.tipo]++;
+      });
+
+      const todasDatas = [...new Set(chartData.map(e => e.data))].sort();
+
+      const datasets = Object.keys(dadosPorMateria).map(materia => {
+        const data = todasDatas.map(data => {
+          const total = dadosPorMateria[materia][data].video + dadosPorMateria[materia][data].questoes;
+          return {
+            x: data,
+            y: total,
+            video: dadosPorMateria[materia][data].video,
+            questoes: dadosPorMateria[materia][data].questoes
+          };
+        });
+
+        return {
+          label: materia,
+          data: data,
+          borderColor: '#' + Math.floor(Math.random()*16777215).toString(16),
+          fill: false,
+          tension: 0.3,
+          pointRadius: 6,
+          pointHoverRadius: 8
+        };
+      });
+
+      if (studyChart) {
+        studyChart.data.labels = todasDatas;
+        studyChart.data.datasets = datasets;
+        studyChart.update();
+      } else {
+        studyChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: todasDatas,
+            datasets: datasets
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { 
+                display: true,
+                position: 'top'
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const data = context.raw;
+                    const materia = context.dataset.label;
+                    let tooltip = `${materia}\n`;
+                    tooltip += `Total: ${data.y} estudo(s)\n`;
+                    if (data.video > 0) {
+                      tooltip += `Vídeo Aula: ${data.video}\n`;
+                    }
+                    if (data.questoes > 0) {
+                      tooltip += `Questões: ${data.questoes}`;
+                    }
+                    return tooltip;
+                  },
+                  title: function(context) {
+                    const data = context[0].raw.x;
+                    const [ano, mes, dia] = data.split('-');
+                    return `Data: ${dia}/${mes}/${ano}`;
+                  }
+                },
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                borderColor: '#fff',
+                borderWidth: 1,
+                padding: 10,
+                displayColors: false
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  stepSize: 1
+                },
+                title: {
+                  display: true,
+                  text: 'Quantidade de Estudos'
+                }
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: 'Data'
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    function mostrarInputNovaMateria() {
+      const select = document.getElementById('studySubject');
+      if (select.value === 'outra') {
+        document.getElementById('novaMateriaContainer').style.display = 'flex';
+      } else {
+        document.getElementById('novaMateriaContainer').style.display = 'none';
+      }
+    }
+
+    function adicionarNovaMateria() {
+      const novaMateria = document.getElementById('novaMateria').value.trim();
+      if (novaMateria) {
+        const select = document.getElementById('studySubject');
+        const option = document.createElement('option');
+        option.value = novaMateria;
+        option.text = novaMateria;
+        
+        // Insere antes da opção "Outra matéria..."
+        select.insertBefore(option, select.lastElementChild);
+        
+        // Seleciona a nova matéria
+        select.value = novaMateria;
+        
+        // Limpa e esconde o input
+        document.getElementById('novaMateria').value = '';
+        document.getElementById('novaMateriaContainer').style.display = 'none';
+      }
+    }
+
+    function registrarEstudo(tipo) {
+      const materia = document.getElementById('studySubject').value.trim();
+      if (!materia) {
+        alert('Selecione uma matéria antes de registrar.');
+        return;
+      }
+      const hoje = new Date().toISOString().split('T')[0];
+      chartData.push({ tipo, materia, data: hoje });
+      localStorage.setItem('estudos', JSON.stringify(chartData));
+      criarOuAtualizarGrafico();
+      document.getElementById('studySubject').value = '';
+    }
+
+    function limparGrafico() {
+      if (confirm('Tem certeza que deseja limpar todo o histórico do gráfico?')) {
+        localStorage.removeItem('estudos');
+        chartData = [];
+        criarOuAtualizarGrafico();
+        // Feedback visual
+        const toast = document.createElement('div');
+        toast.className = 'position-fixed bottom-0 end-0 p-3';
+        toast.style.zIndex = '5';
+        toast.innerHTML = `
+          <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-danger text-white">
+              <strong class="me-auto">Histórico Limpo</strong>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+              O histórico de estudos foi limpo com sucesso!
+            </div>
+          </div>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+      }
+    }
+
+    // Quando o documento estiver carregado
+    document.addEventListener('DOMContentLoaded', function() {
+      // Configurar o formulário de provas
+      const examForm = document.getElementById('examForm');
+      if (examForm) {
+        examForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const prova = {
+            data: document.getElementById('examDate').value,
+            materia: document.getElementById('examSubject').value,
+            nota: document.getElementById('examScore').value,
+            aprovado: document.getElementById('examPassed').value
+          };
+
+          provas.push(prova);
+          localStorage.setItem('provas', JSON.stringify(provas));
+          
+          // Limpa o formulário
+          this.reset();
+          
+          // Atualiza a tabela
+          carregarProvas();
+          
+          // Feedback visual
+          const toast = document.createElement('div');
+          toast.className = 'position-fixed bottom-0 end-0 p-3';
+          toast.style.zIndex = '5';
+          toast.innerHTML = `
+            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="toast-header bg-success text-white">
+                <strong class="me-auto">Sucesso!</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+              <div class="toast-body">
+                Prova registrada com sucesso!
+              </div>
+            </div>
+          `;
+          document.body.appendChild(toast);
+          
+          setTimeout(() => {
+            toast.remove();
+          }, 3000);
+        });
+      }
+
+      // Configurar os links do menu
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const secao = this.getAttribute('data-secao');
+          mostrarSecao(secao);
+        });
+      });
+
+      // Inicializar a página
+      mostrarSecao('dashboard');
+
+      const studySubject = document.getElementById('studySubject');
+      if (studySubject) {
+        studySubject.addEventListener('change', mostrarInputNovaMateria);
+      }
+    });
+  </script>
+</body>
+</html>
