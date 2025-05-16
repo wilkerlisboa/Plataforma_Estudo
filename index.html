@@ -80,6 +80,11 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="#" data-secao="anotacoes">
+            <i class="bi bi-journal-text"></i> Anotações
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="#" data-secao="autor">
             <i class="bi bi-person"></i> Autor
           </a>
@@ -114,12 +119,30 @@
                 <option value="Biologia">Biologia</option>
                 <option value="Inglês">Inglês</option>
                 <option value="Redação">Redação</option>
-                <option value="Redação">legislação</option>
-                <option value="Redação">Direito Administrativo</option>
-                <option value="Redação">Direito Penal</option>
-                <option value="Redação">Direito Penal Processual</option>
-                <option value="Redação">Direito Constitucional</option>
-                <option value="Redação">Conhecimento Especifico</option>
+                <option value="legislação">Legislação</option>
+                <option value="Direito Administrativo">Direito Administrativo</option>
+                <option value="Direito Penal">Direito Penal</option>
+                <option value="Direito Penal Processual">Direito Penal Processual</option>
+                <option value="Direito Constitucional">Direito Constitucional</option>
+                <option value="Conhecimento Especifico">Conhecimento Específico</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Select de Tipo de Estudo -->
+        <div class="row justify-content-center">
+          <div class="col-md-6 mb-3">
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="bi bi-list-check"></i>
+              </span>
+              <select class="form-select" id="studyType">
+                <option value="">Selecione o tipo de estudo</option>
+                <option value="video">Vídeo Aula</option>
+                <option value="questoes">Questões</option>
+                <option value="revisao">Revisão</option>
+                <option value="revisao_questoes">Revisão por Questões</option>
               </select>
             </div>
           </div>
@@ -140,18 +163,11 @@
           </div>
         </div>
 
-        <!-- Botões em baixo um do outro -->
+        <!-- Botão de Registrar -->
         <div class="row justify-content-center">
           <div class="col-md-6 mb-2">
-            <button class="btn btn-primary w-100" onclick="registrarEstudo('video')">
-              <i class="bi bi-camera-video"></i> Estudei por Vídeo Aula
-            </button>
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-md-6 mb-2">
-            <button class="btn btn-success w-100" onclick="registrarEstudo('questoes')">
-              <i class="bi bi-list-check"></i> Estudei por Questões
+            <button class="btn btn-primary w-100" onclick="registrarEstudo()">
+              <i class="bi bi-plus-circle"></i> Registrar Estudo
             </button>
           </div>
         </div>
@@ -236,6 +252,73 @@
       </div>
     </div>
 
+    <!-- Seção de Anotações -->
+    <div id="anotacoes" class="secao" style="display: none;">
+      <h1 class="text-center mb-4">Minhas Anotações</h1>
+      
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <!-- Formulário de Anotação -->
+          <div class="card shadow-sm mb-4">
+            <div class="card-body">
+              <h3 class="card-title text-center mb-4">Nova Anotação</h3>
+              <form id="anotacaoForm" class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Matéria</label>
+                  <select class="form-select" id="anotacaoMateria" required>
+                    <option value="">Selecione a matéria</option>
+                    <option value="Português">Português</option>
+                    <option value="Matemática">Matemática</option>
+                    <option value="História">História</option>
+                    <option value="Geografia">Geografia</option>
+                    <option value="Física">Física</option>
+                    <option value="Química">Química</option>
+                    <option value="Biologia">Biologia</option>
+                    <option value="Inglês">Inglês</option>
+                    <option value="Redação">Redação</option>
+                    <option value="legislação">Legislação</option>
+                    <option value="Direito Administrativo">Direito Administrativo</option>
+                    <option value="Direito Penal">Direito Penal</option>
+                    <option value="Direito Penal Processual">Direito Penal Processual</option>
+                    <option value="Direito Constitucional">Direito Constitucional</option>
+                    <option value="Conhecimento Especifico">Conhecimento Específico</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Título</label>
+                  <input type="text" class="form-control" id="anotacaoTitulo" required>
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Conteúdo</label>
+                  <textarea class="form-control" id="anotacaoConteudo" rows="6" required></textarea>
+                </div>
+                <div class="col-12 text-center">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Salvar Anotação
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Lista de Anotações -->
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h3 class="card-title text-center mb-4">Anotações Salvas</h3>
+              <div class="mb-3">
+                <select class="form-select" id="filtroMateria">
+                  <option value="">Todas as matérias</option>
+                </select>
+              </div>
+              <div id="listaAnotacoes" class="list-group">
+                <!-- As anotações serão inseridas aqui dinamicamente -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Seção Autor -->
     <div id="autor" class="secao" style="display: none;">
       <div class="row justify-content-center">
@@ -283,6 +366,7 @@
     // Variáveis globais
     let chartData = JSON.parse(localStorage.getItem('estudos')) || [];
     let provas = JSON.parse(localStorage.getItem('provas')) || [];
+    let anotacoes = JSON.parse(localStorage.getItem('anotacoes')) || [];
     let studyChart = null;
 
     // Função para carregar as provas
@@ -341,6 +425,8 @@
         criarOuAtualizarGrafico();
       } else if (secao === 'provas') {
         carregarProvas();
+      } else if (secao === 'anotacoes') {
+        carregarAnotacoes();
       } else if (secao === 'autor') {
         // Implemente a lógica para mostrar a seção do autor
       }
@@ -351,29 +437,49 @@
       if (!ctx) return;
       const dadosPorMateria = {};
 
+      // Inicializa o objeto dadosPorMateria com todas as matérias e datas
       chartData.forEach(estudo => {
         if (!dadosPorMateria[estudo.materia]) {
           dadosPorMateria[estudo.materia] = {};
         }
-        if (!dadosPorMateria[estudo.materia][estudo.data]) {
-          dadosPorMateria[estudo.materia][estudo.data] = {
-            video: 0,
-            questoes: 0
-          };
-        }
-        dadosPorMateria[estudo.materia][estudo.data][estudo.tipo]++;
       });
 
+      // Obtém todas as datas únicas
       const todasDatas = [...new Set(chartData.map(e => e.data))].sort();
+
+      // Inicializa todas as combinações de matéria e data com valores zerados
+      Object.keys(dadosPorMateria).forEach(materia => {
+        todasDatas.forEach(data => {
+          if (!dadosPorMateria[materia][data]) {
+            dadosPorMateria[materia][data] = {
+              video: 0,
+              questoes: 0,
+              revisao: 0,
+              revisao_questoes: 0
+            };
+          }
+        });
+      });
+
+      // Agora incrementa os contadores
+      chartData.forEach(estudo => {
+        if (dadosPorMateria[estudo.materia] && 
+            dadosPorMateria[estudo.materia][estudo.data] && 
+            dadosPorMateria[estudo.materia][estudo.data][estudo.tipo] !== undefined) {
+          dadosPorMateria[estudo.materia][estudo.data][estudo.tipo]++;
+        }
+      });
 
       const datasets = Object.keys(dadosPorMateria).map(materia => {
         const data = todasDatas.map(data => {
-          const total = dadosPorMateria[materia][data].video + dadosPorMateria[materia][data].questoes;
+          const registro = dadosPorMateria[materia][data];
           return {
             x: data,
-            y: total,
-            video: dadosPorMateria[materia][data].video,
-            questoes: dadosPorMateria[materia][data].questoes
+            y: registro.video + registro.questoes + registro.revisao + registro.revisao_questoes,
+            video: registro.video,
+            questoes: registro.questoes,
+            revisao: registro.revisao,
+            revisao_questoes: registro.revisao_questoes
           };
         });
 
@@ -417,7 +523,13 @@
                       tooltip += `Vídeo Aula: ${data.video}\n`;
                     }
                     if (data.questoes > 0) {
-                      tooltip += `Questões: ${data.questoes}`;
+                      tooltip += `Questões: ${data.questoes}\n`;
+                    }
+                    if (data.revisao > 0) {
+                      tooltip += `Revisão: ${data.revisao}\n`;
+                    }
+                    if (data.revisao_questoes > 0) {
+                      tooltip += `Revisão por Questões: ${data.revisao_questoes}`;
                     }
                     return tooltip;
                   },
@@ -488,17 +600,48 @@
       }
     }
 
-    function registrarEstudo(tipo) {
+    function registrarEstudo() {
       const materia = document.getElementById('studySubject').value.trim();
+      const tipo = document.getElementById('studyType').value;
+      
       if (!materia) {
         alert('Selecione uma matéria antes de registrar.');
         return;
       }
+      
+      if (!tipo) {
+        alert('Selecione o tipo de estudo antes de registrar.');
+        return;
+      }
+
       const hoje = new Date().toISOString().split('T')[0];
       chartData.push({ tipo, materia, data: hoje });
       localStorage.setItem('estudos', JSON.stringify(chartData));
       criarOuAtualizarGrafico();
+      
+      // Limpa os campos
       document.getElementById('studySubject').value = '';
+      document.getElementById('studyType').value = '';
+      
+      // Feedback visual
+      const toast = document.createElement('div');
+      toast.className = 'position-fixed bottom-0 end-0 p-3';
+      toast.style.zIndex = '5';
+      toast.innerHTML = `
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header bg-success text-white">
+            <strong class="me-auto">Sucesso!</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+            Estudo registrado com sucesso!
+          </div>
+        </div>
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
     }
 
     function limparGrafico() {
@@ -525,6 +668,103 @@
         setTimeout(() => {
           toast.remove();
         }, 3000);
+      }
+    }
+
+    // Funções para gerenciar anotações
+    function carregarAnotacoes() {
+      const listaAnotacoes = document.getElementById('listaAnotacoes');
+      const filtroMateria = document.getElementById('filtroMateria');
+      
+      if (!listaAnotacoes || !filtroMateria) return;
+
+      // Atualiza o filtro de matérias
+      const materias = [...new Set(anotacoes.map(a => a.materia))];
+      filtroMateria.innerHTML = '<option value="">Todas as matérias</option>';
+      materias.forEach(materia => {
+        const option = document.createElement('option');
+        option.value = materia;
+        option.textContent = materia;
+        filtroMateria.appendChild(option);
+      });
+
+      // Filtra as anotações
+      const materiaSelecionada = filtroMateria.value;
+      const anotacoesFiltradas = materiaSelecionada 
+        ? anotacoes.filter(a => a.materia === materiaSelecionada)
+        : anotacoes;
+
+      // Ordena por data mais recente
+      anotacoesFiltradas.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+      // Limpa e preenche a lista
+      listaAnotacoes.innerHTML = '';
+      anotacoesFiltradas.forEach((anotacao, index) => {
+        const item = document.createElement('div');
+        item.className = 'list-group-item';
+        item.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-1">${anotacao.titulo}</h5>
+            <small class="text-muted">${formatarData(anotacao.data)}</small>
+          </div>
+          <p class="mb-1">${anotacao.materia}</p>
+          <p class="mb-1">${anotacao.conteudo}</p>
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-outline-danger btn-sm me-2" onclick="excluirAnotacao(${index})">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        `;
+        listaAnotacoes.appendChild(item);
+      });
+    }
+
+    function salvarAnotacao(e) {
+      e.preventDefault();
+      
+      const anotacao = {
+        materia: document.getElementById('anotacaoMateria').value,
+        titulo: document.getElementById('anotacaoTitulo').value,
+        conteudo: document.getElementById('anotacaoConteudo').value,
+        data: new Date().toISOString().split('T')[0]
+      };
+
+      anotacoes.push(anotacao);
+      localStorage.setItem('anotacoes', JSON.stringify(anotacoes));
+      
+      // Limpa o formulário
+      e.target.reset();
+      
+      // Atualiza a lista
+      carregarAnotacoes();
+      
+      // Feedback visual
+      const toast = document.createElement('div');
+      toast.className = 'position-fixed bottom-0 end-0 p-3';
+      toast.style.zIndex = '5';
+      toast.innerHTML = `
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header bg-success text-white">
+            <strong class="me-auto">Sucesso!</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+            Anotação salva com sucesso!
+          </div>
+        </div>
+      `;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    function excluirAnotacao(index) {
+      if (confirm('Tem certeza que deseja excluir esta anotação?')) {
+        anotacoes.splice(index, 1);
+        localStorage.setItem('anotacoes', JSON.stringify(anotacoes));
+        carregarAnotacoes();
       }
     }
 
@@ -590,6 +830,18 @@
       const studySubject = document.getElementById('studySubject');
       if (studySubject) {
         studySubject.addEventListener('change', mostrarInputNovaMateria);
+      }
+
+      // Configurar o formulário de anotações
+      const anotacaoForm = document.getElementById('anotacaoForm');
+      if (anotacaoForm) {
+        anotacaoForm.addEventListener('submit', salvarAnotacao);
+      }
+
+      // Configurar o filtro de matérias
+      const filtroMateria = document.getElementById('filtroMateria');
+      if (filtroMateria) {
+        filtroMateria.addEventListener('change', carregarAnotacoes);
       }
     });
   </script>
