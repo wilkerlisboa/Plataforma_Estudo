@@ -6,8 +6,15 @@
   <title>Plataforma de Estudo</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
   <style>
+    /* Estilos existentes */
     .sidebar {
       position: fixed;
       top: 0;
@@ -17,15 +24,287 @@
       padding: 48px 0 0;
       box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
       background-color: #f8f9fa;
+      transition: background-color 0.3s ease;
     }
-    
-    .sidebar-sticky {
-      position: relative;
-      top: 0;
-      height: calc(100vh - 48px);
-      padding-top: .5rem;
-      overflow-x: hidden;
-      overflow-y: auto;
+
+    /* Estilos do tema escuro */
+    [data-theme="dark"] {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] body {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .sidebar {
+      background-color: #1e1e1e;
+      border-right: 1px solid #333;
+    }
+
+    [data-theme="dark"] .nav-link {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .nav-link:hover {
+      background-color: #2d2d2d;
+    }
+
+    [data-theme="dark"] .nav-link.active {
+      color: #4dabf7;
+      background-color: #2d2d2d;
+    }
+
+    [data-theme="dark"] .card {
+      background-color: #1e1e1e;
+      border-color: #333;
+    }
+
+    [data-theme="dark"] .card-header {
+      background-color: #2d2d2d;
+      border-bottom-color: #333;
+    }
+
+    [data-theme="dark"] .card-title {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .card-text {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .modal-content {
+      background-color: #1e1e1e;
+      border-color: #333;
+    }
+
+    [data-theme="dark"] .modal-header {
+      background-color: #2d2d2d;
+      border-bottom-color: #333;
+    }
+
+    [data-theme="dark"] .modal-footer {
+      border-top-color: #333;
+    }
+
+    [data-theme="dark"] .table {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .table td,
+    [data-theme="dark"] .table th {
+      border-color: #333;
+    }
+
+    [data-theme="dark"] .table-light {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .form-control {
+      background-color: #2d2d2d;
+      border-color: #333;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .form-control:focus {
+      background-color: #2d2d2d;
+      border-color: #4dabf7;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .form-select {
+      background-color: #2d2d2d;
+      border-color: #333;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .form-label {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .btn-close {
+      filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    [data-theme="dark"] .theme-toggle {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .bi {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .input-group-text {
+      background-color: #2d2d2d;
+      border-color: #333;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .list-group-item {
+      background-color: #1e1e1e;
+      border-color: #333;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .text-muted {
+      color: #9e9e9e !important;
+    }
+
+    [data-theme="dark"] .lead {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] h1,
+    [data-theme="dark"] h2,
+    [data-theme="dark"] h3,
+    [data-theme="dark"] h4,
+    [data-theme="dark"] h5,
+    [data-theme="dark"] h6 {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .badge {
+      color: #121212;
+    }
+
+    [data-theme="dark"] .toast {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .toast-header {
+      background-color: #2d2d2d;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .btn-outline-primary {
+      color: #4dabf7;
+      border-color: #4dabf7;
+    }
+
+    [data-theme="dark"] .btn-outline-primary:hover {
+      background-color: #4dabf7;
+      border-color: #4dabf7;
+      color: #121212;
+    }
+
+    [data-theme="dark"] .btn-outline-danger {
+      color: #ff6b6b;
+      border-color: #ff6b6b;
+    }
+
+    [data-theme="dark"] .btn-outline-danger:hover {
+      background-color: #ff6b6b;
+      border-color: #ff6b6b;
+      color: #121212;
+    }
+
+    [data-theme="dark"] .btn-outline-success {
+      color: #51cf66;
+      border-color: #51cf66;
+    }
+
+    [data-theme="dark"] .btn-outline-success:hover {
+      background-color: #51cf66;
+      border-color: #51cf66;
+      color: #121212;
+    }
+
+    [data-theme="dark"] .btn-outline-secondary {
+      color: #adb5bd;
+      border-color: #adb5bd;
+    }
+
+    [data-theme="dark"] .btn-outline-secondary:hover {
+      background-color: #adb5bd;
+      border-color: #adb5bd;
+      color: #121212;
+    }
+
+    /* Estilos do Calendário no Tema Escuro */
+    [data-theme="dark"] .fc {
+      background-color: #1e1e1e;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    [data-theme="dark"] .fc .fc-toolbar-title {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .fc .fc-col-header-cell {
+      background-color: #2d2d2d;
+    }
+
+    [data-theme="dark"] .fc .fc-col-header-cell-cushion {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .fc .fc-daygrid-day {
+      background-color: #1e1e1e;
+    }
+
+    [data-theme="dark"] .fc .fc-daygrid-day:hover {
+      background-color: #2d2d2d;
+    }
+
+    [data-theme="dark"] .fc .fc-day-today {
+      background-color: #1a3a5f !important;
+    }
+
+    [data-theme="dark"] .fc .fc-daygrid-day-number {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .fc .fc-daygrid-more-link {
+      background-color: #2d2d2d;
+      color: #4dabf7;
+    }
+
+    [data-theme="dark"] .fc .fc-daygrid-more-link:hover {
+      background-color: #3d3d3d;
+    }
+
+    /* Estilos para eventos no tema escuro */
+    [data-theme="dark"] .fc-event.video {
+      background-color: #1a3a5f;
+      border-color: #1a3a5f;
+    }
+
+    [data-theme="dark"] .fc-event.questoes {
+      background-color: #1a5f3a;
+      border-color: #1a5f3a;
+    }
+
+    [data-theme="dark"] .fc-event.revisao {
+      background-color: #5f4a1a;
+      border-color: #5f4a1a;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .fc-event.revisao_questoes {
+      background-color: #1a5f5f;
+      border-color: #1a5f5f;
+    }
+
+    /* Botão de tema */
+    .theme-toggle {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      z-index: 1000;
+      background: none;
+      border: none;
+      color: #333;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 5px;
+      transition: transform 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(30deg);
     }
 
     .main-content {
@@ -62,9 +341,528 @@
       max-width: 700px;
       margin: auto;
     }
+
+    /* Estilos do Calendário */
+    .fc {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .fc .fc-toolbar {
+      margin-bottom: 1.5em !important;
+    }
+
+    .fc .fc-toolbar-title {
+      font-size: 1.5em !important;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .fc .fc-button {
+      padding: 0.5em 1em;
+      font-weight: 500;
+      text-transform: capitalize;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .fc .fc-button-primary {
+      background-color: #0d6efd;
+      border-color: #0d6efd;
+    }
+
+    .fc .fc-button-primary:hover {
+      background-color: #0b5ed7;
+      border-color: #0a58ca;
+      transform: translateY(-1px);
+    }
+
+    .fc .fc-button-primary:not(:disabled).fc-button-active {
+      background-color: #0a58ca;
+      border-color: #0a58ca;
+    }
+
+    .fc .fc-daygrid-day {
+      transition: all 0.3s ease;
+    }
+
+    .fc .fc-daygrid-day:hover {
+      background-color: #f8f9fa;
+    }
+
+    .fc .fc-day-today {
+      background-color: #e8f4ff !important;
+    }
+
+    .fc .fc-daygrid-day-number {
+      padding: 8px;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+
+    .fc .fc-event {
+      border-radius: 4px;
+      padding: 2px 4px;
+      margin: 1px 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .fc .fc-event:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .fc .fc-event-title {
+      font-weight: 500;
+      padding: 2px 4px;
+    }
+
+    .fc .fc-col-header-cell {
+      padding: 10px 0;
+      background-color: #f8f9fa;
+    }
+
+    .fc .fc-col-header-cell-cushion {
+      color: #2c3e50;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 8px;
+    }
+
+    .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+      background-color: #0d6efd;
+      color: white;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 4px;
+    }
+
+    .fc .fc-daygrid-more-link {
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      padding: 2px 4px;
+      color: #0d6efd;
+      font-weight: 500;
+    }
+
+    .fc .fc-daygrid-more-link:hover {
+      background-color: #e9ecef;
+    }
+
+    /* Estilos adicionais para o tema escuro */
+    [data-theme="dark"] .btn-primary {
+      background-color: #4dabf7;
+      border-color: #4dabf7;
+      color: #121212;
+    }
+
+    [data-theme="dark"] .btn-primary:hover {
+      background-color: #339af0;
+      border-color: #339af0;
+    }
+
+    [data-theme="dark"] .btn-outline-primary {
+      color: #4dabf7;
+      border-color: #4dabf7;
+    }
+
+    [data-theme="dark"] .btn-outline-primary:hover {
+      background-color: #4dabf7;
+      border-color: #4dabf7;
+      color: #121212;
+    }
+
+    [data-theme="dark"] .text-primary {
+      color: #4dabf7 !important;
+    }
+
+    [data-theme="dark"] .text-muted {
+      color: #9e9e9e !important;
+    }
+
+    [data-theme="dark"] .badge {
+      color: #121212;
+    }
+
+    [data-theme="dark"] .toast {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .toast-header {
+      background-color: #2d2d2d;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .fc .fc-button {
+      background-color: #2d2d2d;
+      border-color: #333;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .fc .fc-button:hover {
+      background-color: #3d3d3d;
+      border-color: #444;
+    }
+
+    [data-theme="dark"] .fc .fc-button-primary:not(:disabled).fc-button-active {
+      background-color: #4dabf7;
+      border-color: #4dabf7;
+      color: #121212;
+    }
+
+    [data-theme="dark"] .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+      background-color: #4dabf7;
+      color: #121212;
+    }
+
+    [data-theme="dark"] .list-group-item {
+      background-color: #1e1e1e;
+      border-color: #333;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .input-group-text {
+      background-color: #2d2d2d;
+      border-color: #333;
+      color: #e0e0e0;
+    }
+
+    /* Estilos para a tabela de provas no tema escuro */
+    [data-theme="dark"] .table-hover tbody tr:hover {
+      background-color: #2d2d2d;
+    }
+
+    [data-theme="dark"] .table > :not(caption) > * > * {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .table > thead {
+      background-color: #2d2d2d;
+    }
+
+    [data-theme="dark"] .table > thead > tr > th {
+      color: #e0e0e0;
+      border-bottom-color: #333;
+    }
+
+    [data-theme="dark"] .table > tbody > tr > td {
+      border-color: #333;
+    }
+
+    [data-theme="dark"] .table-responsive {
+      background-color: #1e1e1e;
+      border-radius: 8px;
+    }
+
+    [data-theme="dark"] .table-light {
+      background-color: #1e1e1e;
+    }
+
+    [data-theme="dark"] .table-light th,
+    [data-theme="dark"] .table-light td {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .table-light thead th {
+      background-color: #2d2d2d;
+      border-bottom-color: #333;
+    }
+
+    [data-theme="dark"] .table-light tbody tr:hover {
+      background-color: #2d2d2d;
+    }
+
+    [data-theme="dark"] .table-light tbody tr td {
+      border-color: #333;
+    }
+
+    /* Estilos para ícones e placeholders no tema escuro */
+    [data-theme="dark"] .bi {
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] ::placeholder {
+      color: #ffffff !important;
+      opacity: 0.7;
+    }
+
+    [data-theme="dark"] :-ms-input-placeholder {
+      color: #ffffff !important;
+      opacity: 0.7;
+    }
+
+    [data-theme="dark"] ::-ms-input-placeholder {
+      color: #ffffff !important;
+      opacity: 0.7;
+    }
+
+    [data-theme="dark"] .input-group-text .bi {
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] .btn .bi {
+      color: inherit;
+    }
+
+    [data-theme="dark"] .nav-link .bi {
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] .nav-link.active .bi {
+      color: #4dabf7;
+    }
+
+    /* Estilos para botões de flashcards no tema escuro */
+    [data-theme="dark"] #flashcards .btn-outline-primary {
+      color: #4dabf7;
+      border-color: #4dabf7;
+    }
+
+    [data-theme="dark"] #flashcards .btn-outline-primary:hover,
+    [data-theme="dark"] #flashcards .btn-outline-primary.active {
+      background-color: #4dabf7;
+      border-color: #4dabf7;
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] #flashcards .btn-outline-primary.active .bi,
+    [data-theme="dark"] #flashcards .btn-outline-primary:hover .bi {
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] #flashcards .btn-outline-primary .bi {
+      color: #4dabf7;
+    }
+
+    [data-theme="dark"] #flashcards .btn-primary {
+      background-color: #4dabf7;
+      border-color: #4dabf7;
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] #flashcards .btn-primary:hover {
+      background-color: #339af0;
+      border-color: #339af0;
+    }
+
+    [data-theme="dark"] #flashcards .btn-primary .bi {
+      color: #ffffff;
+    }
+
+    /* Estilos para os toasts personalizados */
+    .custom-toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      min-width: 300px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    [data-theme="dark"] .custom-toast {
+      background: #1e1e1e;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .custom-toast-header {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    [data-theme="dark"] .custom-toast-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .custom-toast-body {
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .custom-toast-icon {
+      font-size: 1.5rem;
+    }
+
+    .custom-toast-message {
+      flex: 1;
+    }
+
+    .custom-toast-close {
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      padding: 4px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .custom-toast-close:hover {
+      opacity: 1;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+
+    .custom-toast.hide {
+      animation: slideOut 0.3s ease-in forwards;
+    }
+
+    /* Cores dos toasts */
+    .custom-toast.success .custom-toast-header {
+      background-color: #198754;
+      color: white;
+    }
+
+    .custom-toast.error .custom-toast-header {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .custom-toast.warning .custom-toast-header {
+      background-color: #ffc107;
+      color: #000;
+    }
+
+    .custom-toast.info .custom-toast-header {
+      background-color: #0dcaf0;
+      color: white;
+    }
+
+    [data-theme="dark"] .custom-toast.success .custom-toast-header {
+      background-color: #2ea043;
+    }
+
+    [data-theme="dark"] .custom-toast.error .custom-toast-header {
+      background-color: #f85149;
+    }
+
+    [data-theme="dark"] .custom-toast.warning .custom-toast-header {
+      background-color: #d29922;
+      color: white;
+    }
+
+    [data-theme="dark"] .custom-toast.info .custom-toast-header {
+      background-color: #2188ff;
+    }
+
+    /* Estilos do SweetAlert2 para o tema escuro */
+    [data-theme="dark"] .swal2-popup {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .swal2-title {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .swal2-html-container {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .swal2-confirm {
+      background-color: #4dabf7 !important;
+    }
+
+    [data-theme="dark"] .swal2-cancel {
+      background-color: #dc3545 !important;
+    }
+
+    [data-theme="dark"] .swal2-toast {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .swal2-toast .swal2-title {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .swal2-toast .swal2-html-container {
+      color: #e0e0e0;
+    }
+
+    [data-theme="dark"] .swal2-icon {
+      border-color: #333;
+    }
+
+    [data-theme="dark"] .swal2-icon.swal2-success {
+      border-color: #2ea043;
+    }
+
+    [data-theme="dark"] .swal2-icon.swal2-error {
+      border-color: #f85149;
+    }
+
+    [data-theme="dark"] .swal2-icon.swal2-warning {
+      border-color: #d29922;
+    }
+
+    [data-theme="dark"] .swal2-icon.swal2-info {
+      border-color: #2188ff;
+    }
+
+    [data-theme="dark"] .swal2-timer-progress-bar {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Estilo para o ícone do calendário no modo escuro */
+    [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+
+    [data-theme="dark"] input[type="date"]::-webkit-inner-spin-button,
+    [data-theme="dark"] input[type="date"]::-webkit-clear-button {
+      filter: invert(1);
+    }
+
+    [data-theme="dark"] input[type="date"] {
+      color-scheme: dark;
+    }
   </style>
 </head>
 <body>
+  <!-- Botão de Tema -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
+    <i class="bi bi-sun-fill"></i>
+  </button>
+
   <!-- Menu Lateral -->
   <nav class="col-md-3 col-lg-2 d-md-block sidebar">
     <div class="sidebar-sticky">
@@ -82,6 +880,16 @@
         <li class="nav-item">
           <a class="nav-link" href="#" data-secao="anotacoes">
             <i class="bi bi-journal-text"></i> Anotações
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-secao="flashcards">
+            <i class="bi bi-card-text"></i> Flash Cards
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-secao="cronograma">
+            <i class="bi bi-calendar-week"></i> Cronograma
           </a>
         </li>
         <li class="nav-item">
@@ -208,19 +1016,19 @@
           <h3 class="card-title text-center mb-4">Registrar Nova Prova</h3>
           <form id="examForm" class="row g-3 justify-content-center">
             <div class="col-md-3">
-              <label class="form-label">Data da Prova</label>
+              <label for="examDate" class="form-label">Data da Prova</label>
               <input type="date" class="form-control" id="examDate" required>
             </div>
             <div class="col-md-3">
-              <label class="form-label">Prova</label>
+              <label for="examSubject" class="form-label">Prova</label>
               <input type="text" class="form-control" id="examSubject" placeholder="Digite o nome da prova" required>
             </div>
             <div class="col-md-2">
-              <label class="form-label">Nota</label>
+              <label for="examScore" class="form-label">Nota</label>
               <input type="number" class="form-control" id="examScore" placeholder="Nota" required>
             </div>
             <div class="col-md-2">
-              <label class="form-label">Status</label>
+              <label for="examPassed" class="form-label">Status</label>
               <select class="form-select" id="examPassed">
                 <option value="Sim">Aprovado</option>
                 <option value="Não">Reprovado</option>
@@ -269,7 +1077,7 @@
               <h3 class="card-title text-center mb-4">Nova Anotação</h3>
               <form id="anotacaoForm" class="row g-3">
                 <div class="col-md-6">
-                  <label class="form-label">Matéria</label>
+                  <label for="anotacaoMateria" class="form-label">Matéria</label>
                   <select class="form-select" id="anotacaoMateria" required>
                     <option value="">Selecione a matéria</option>
                     <option value="Anatomia">Anatomia</option>
@@ -295,11 +1103,11 @@
                   </select>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label">Título</label>
+                  <label for="anotacaoTitulo" class="form-label">Título</label>
                   <input type="text" class="form-control" id="anotacaoTitulo" required>
                 </div>
                 <div class="col-12">
-                  <label class="form-label">Conteúdo</label>
+                  <label for="anotacaoConteudo" class="form-label">Conteúdo</label>
                   <textarea class="form-control" id="anotacaoConteudo" rows="6" required></textarea>
                 </div>
                 <div class="col-12 text-center">
@@ -315,15 +1123,300 @@
           <div class="card shadow-sm">
             <div class="card-body">
               <h3 class="card-title text-center mb-4">Anotações Salvas</h3>
-              <div class="mb-3">
-                <select class="form-select" id="filtroMateria">
-                  <option value="">Todas as matérias</option>
-                </select>
+              
+              <!-- Filtros -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <div class="input-group">
+                    <span class="input-group-text">
+                      <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" class="form-control" id="buscaTitulo" placeholder="Buscar por título...">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <select class="form-select" id="filtroMateria">
+                    <option value="">Todas as matérias</option>
+                  </select>
+                </div>
               </div>
+
               <div id="listaAnotacoes" class="list-group">
                 <!-- As anotações serão inseridas aqui dinamicamente -->
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção de Flash Cards -->
+    <div id="flashcards" class="secao" style="display: none;">
+      <h1 class="text-center mb-4">Flash Cards</h1>
+      
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <!-- Navegação por Abas -->
+          <div class="card shadow-sm mb-4">
+            <div class="card-body">
+              <!-- Botões de Navegação -->
+              <div class="d-flex justify-content-center mb-4">
+                <button class="btn btn-outline-primary mx-2" onclick="mostrarAbaFlashcard('estudo')">
+                  <i class="bi bi-book"></i> Área de Estudo
+                </button>
+                <button class="btn btn-outline-primary mx-2" onclick="mostrarAbaFlashcard('novo')">
+                  <i class="bi bi-plus-circle"></i> Novo Flash Card
+                </button>
+                <button class="btn btn-outline-primary mx-2" onclick="mostrarAbaFlashcard('gerenciar')">
+                  <i class="bi bi-gear"></i> Gerenciar
+                </button>
+              </div>
+
+              <!-- Conteúdo das Abas -->
+              <!-- Aba de Estudo -->
+              <div id="conteudo-estudo" class="conteudo-aba">
+                <div class="card shadow-sm">
+                  <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Área de Estudo</h3>
+                    
+                    <!-- Filtros -->
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <select class="form-select" id="filtroFlashcardMateria">
+                          <option value="">Todas as matérias</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <select class="form-select" id="filtroFlashcardCategoria">
+                          <option value="">Todas as categorias</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- Flash Card Atual -->
+                    <div id="flashcardAtual" class="text-center mb-4" style="display: none;">
+                      <div class="card mb-3 shadow-sm">
+                        <div class="card-body">
+                          <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title mb-0" id="flashcardPerguntaAtual"></h5>
+                            <span class="badge bg-primary" id="flashcardCategoriaAtual"></span>
+                          </div>
+                          <p class="card-text" id="flashcardRespostaAtual" style="display: none;"></p>
+                          <div class="d-flex justify-content-center">
+                            <button class="btn btn-primary" onclick="mostrarResposta()">
+                              <i class="bi bi-eye"></i> Mostrar Resposta
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-success" onclick="avancarFlashcard()">
+                          <i class="bi bi-check-circle"></i> Próximo
+                        </button>
+                        <button class="btn btn-secondary" onclick="reiniciarFlashcards()">
+                          <i class="bi bi-arrow-repeat"></i> Reiniciar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Aba de Novo Flash Card -->
+              <div id="conteudo-novo" class="conteudo-aba" style="display: none;">
+                <div class="card shadow-sm">
+                  <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Novo Flash Card</h3>
+                    <form id="flashcardForm" class="row g-3">
+                      <div class="col-md-6">
+                        <label for="flashcardMateria" class="form-label">Matéria</label>
+                        <select class="form-select" id="flashcardMateria" required>
+                          <option value="">Selecione a matéria</option>
+                          <option value="Anatomia">Anatomia</option>
+                          <option value="Biologia">Biologia</option>
+                          <option value="Conhecimento Especifico">Conhecimento Específico</option>
+                          <option value="Direito Administrativo">Direito Administrativo</option>
+                          <option value="Direito Constitucional">Direito Constitucional</option>
+                          <option value="Direito Penal">Direito Penal</option>
+                          <option value="Direito Penal Processual">Direito Penal Processual</option>
+                          <option value="Física">Física</option>
+                          <option value="Geografia">Geografia</option>
+                          <option value="História">História</option>
+                          <option value="Inglês">Inglês</option>
+                          <option value="legislação">Legislação</option>
+                          <option value="Matemática">Matemática</option>
+                          <option value="Português">Português</option>
+                          <option value="Posicionamento">Posicionamento</option>
+                          <option value="Proteção Radiológica">Proteção Radiológica</option>
+                          <option value="Redação">Redação</option>
+                          <option value="Ressonância">Ressonância</option>
+                          <option value="SUS">SUS</option>
+                          <option value="Tomografia">Tomografia</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="flashcardCategoria" class="form-label">Categoria</label>
+                        <input type="text" class="form-control" id="flashcardCategoria" placeholder="Ex: Conceitos, Fórmulas, etc." required>
+                      </div>
+                      <div class="col-12">
+                        <label for="flashcardPergunta" class="form-label">Pergunta</label>
+                        <textarea class="form-control" id="flashcardPergunta" rows="3" required></textarea>
+                      </div>
+                      <div class="col-12">
+                        <label for="flashcardResposta" class="form-label">Resposta</label>
+                        <textarea class="form-control" id="flashcardResposta" rows="3" required></textarea>
+                      </div>
+                      <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-primary">
+                          <i class="bi bi-save"></i> Salvar Flash Card
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Aba de Gerenciamento -->
+              <div id="conteudo-gerenciar" class="conteudo-aba" style="display: none;">
+                <div class="card shadow-sm">
+                  <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Gerenciar Flash Cards</h3>
+                    <div id="listaGerenciamentoFlashcards" class="list-group">
+                      <!-- Os flash cards para gerenciamento serão inseridos aqui dinamicamente -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção de Cronograma -->
+    <div id="cronograma" class="secao" style="display: none;">
+      <h1 class="text-center mb-4">Cronograma de Estudos</h1>
+      
+      <div class="row justify-content-center">
+        <div class="col-md-10">
+          <!-- Formulário de Nova Atividade -->
+          <div class="card shadow-sm mb-4">
+            <div class="card-body">
+              <h3 class="card-title text-center mb-4">Nova Atividade</h3>
+              <form id="cronogramaForm" class="row g-3">
+                <div class="col-md-4">
+                  <label for="atividadeMateria" class="form-label">Matéria</label>
+                  <select class="form-select" id="atividadeMateria" required>
+                    <option value="">Selecione a matéria</option>
+                    <option value="Anatomia">Anatomia</option>
+                    <option value="Biologia">Biologia</option>
+                    <option value="Conhecimento Especifico">Conhecimento Específico</option>
+                    <option value="Direito Administrativo">Direito Administrativo</option>
+                    <option value="Direito Constitucional">Direito Constitucional</option>
+                    <option value="Direito Penal">Direito Penal</option>
+                    <option value="Direito Penal Processual">Direito Penal Processual</option>
+                    <option value="Física">Física</option>
+                    <option value="Geografia">Geografia</option>
+                    <option value="História">História</option>
+                    <option value="Inglês">Inglês</option>
+                    <option value="legislação">Legislação</option>
+                    <option value="Matemática">Matemática</option>
+                    <option value="Português">Português</option>
+                    <option value="Posicionamento">Posicionamento</option>
+                    <option value="Proteção Radiológica">Proteção Radiológica</option>
+                    <option value="Redação">Redação</option>
+                    <option value="Ressonância">Ressonância</option>
+                    <option value="SUS">SUS</option>
+                    <option value="Tomografia">Tomografia</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="atividadeData" class="form-label">Data</label>
+                  <input type="date" class="form-control" id="atividadeData" required>
+                </div>
+                <div class="col-md-4">
+                  <label for="atividadeHora" class="form-label">Horário</label>
+                  <input type="time" class="form-control" id="atividadeHora" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="atividadeTitulo" class="form-label">Título</label>
+                  <input type="text" class="form-control" id="atividadeTitulo" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="atividadeTipo" class="form-label">Tipo de Atividade</label>
+                  <select class="form-select" id="atividadeTipo" required>
+                    <option value="">Selecione o tipo</option>
+                    <option value="video">Vídeo Aula</option>
+                    <option value="questoes">Questões</option>
+                    <option value="revisao">Revisão</option>
+                    <option value="revisao_questoes">Revisão por Questões</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label for="atividadeDescricao" class="form-label">Descrição</label>
+                  <textarea class="form-control" id="atividadeDescricao" rows="3"></textarea>
+                </div>
+                <div class="col-12 text-center">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Salvar Atividade
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Calendário -->
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h3 class="card-title text-center mb-4">Atividades Agendadas</h3>
+              
+              <!-- Filtros -->
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <select class="form-select" id="filtroCronogramaMateria">
+                    <option value="">Todas as matérias</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <select class="form-select" id="filtroCronogramaTipo">
+                    <option value="">Todos os tipos</option>
+                    <option value="video">Vídeo Aula</option>
+                    <option value="questoes">Questões</option>
+                    <option value="revisao">Revisão</option>
+                    <option value="revisao_questoes">Revisão por Questões</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="calendario"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Detalhes da Atividade -->
+    <div class="modal fade" id="atividadeModal" tabindex="-1" aria-labelledby="modalTitulo" aria-modal="true" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitulo"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-2"><strong>Matéria:</strong> <span id="modalMateria"></span></p>
+            <p class="mb-2"><strong>Tipo:</strong> <span id="modalTipo"></span></p>
+            <p class="mb-2"><strong>Data:</strong> <span id="modalData"></span></p>
+            <p class="mb-2"><strong>Horário:</strong> <span id="modalHora"></span></p>
+            <p class="mb-2"><strong>Descrição:</strong> <span id="modalDescricao"></span></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btnEditarAtividade">
+              <i class="bi bi-pencil"></i> Editar
+            </button>
+            <button type="button" class="btn btn-danger" id="btnExcluirAtividade">
+              <i class="bi bi-trash"></i> Excluir
+            </button>
           </div>
         </div>
       </div>
@@ -377,9 +1470,17 @@
     let chartData = JSON.parse(localStorage.getItem('estudos')) || [];
     let provas = JSON.parse(localStorage.getItem('provas')) || [];
     let anotacoes = JSON.parse(localStorage.getItem('anotacoes')) || [];
+    let flashcards = JSON.parse(localStorage.getItem('flashcards')) || [];
+    let cronograma = JSON.parse(localStorage.getItem('cronograma')) || [];
+    let flashcardsAtuais = [];
     let studyChart = null;
+    let abaFlashcardAtual = 'estudo';
 
-    // Função para carregar as provas
+    function formatarData(data) {
+      const [ano, mes, dia] = data.split('-');
+      return `${dia}/${mes}/${ano}`;
+    }
+
     function carregarProvas() {
       const tbody = document.getElementById('examTableBody');
       if (!tbody) return;
@@ -407,38 +1508,75 @@
       });
     }
 
-    function formatarData(data) {
-      const [ano, mes, dia] = data.split('-');
-      return `${dia}/${mes}/${ano}`;
-    }
-
     function excluirProva(index) {
-      if (confirm('Tem certeza que deseja excluir esta prova?')) {
-        provas.splice(index, 1);
-        localStorage.setItem('provas', JSON.stringify(provas));
-        carregarProvas();
-      }
+      Swal.fire({
+        title: 'Tem certeza?',
+        text: "Esta ação não poderá ser revertida!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'excluir!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          provas.splice(index, 1);
+          localStorage.setItem('provas', JSON.stringify(provas));
+          carregarProvas();
+          Swal.fire(
+            'Excluído!',
+            'A prova foi excluída com sucesso.',
+            'success'
+          );
+        }
+      });
     }
 
     function mostrarSecao(secao) {
-      document.querySelectorAll('.secao').forEach(s => s.style.display = 'none');
-      document.getElementById(secao).style.display = 'block';
+      // Esconde todas as seções
+      document.querySelectorAll('.secao').forEach(s => {
+        if (s) s.style.display = 'none';
+      });
       
+      // Mostra a seção selecionada
+      const secaoAtual = document.getElementById(secao);
+      if (secaoAtual) {
+        secaoAtual.style.display = 'block';
+      }
+      
+      // Atualiza o menu
       document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('data-secao') === secao) {
-          link.classList.add('active');
+        if (link) {
+          link.classList.remove('active');
+          if (link.getAttribute('data-secao') === secao) {
+            link.classList.add('active');
+          }
         }
       });
 
+      // Carrega o conteúdo específico da seção
       if (secao === 'dashboard') {
         criarOuAtualizarGrafico();
       } else if (secao === 'provas') {
         carregarProvas();
       } else if (secao === 'anotacoes') {
         carregarAnotacoes();
-      } else if (secao === 'autor') {
-        // Implemente a lógica para mostrar a seção do autor
+      } else if (secao === 'flashcards') {
+        carregarFlashcards();
+        document.querySelectorAll('.conteudo-aba').forEach(conteudo => {
+          conteudo.style.display = 'none';
+        });
+        document.getElementById(`conteudo-${abaFlashcardAtual}`).style.display = 'block';
+        
+        document.querySelectorAll('.btn-outline-primary').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        const botaoAtual = document.querySelector(`button[onclick="mostrarAbaFlashcard('${abaFlashcardAtual}')"]`);
+        if (botaoAtual) {
+          botaoAtual.classList.add('active');
+        }
+      } else if (secao === 'cronograma') {
+        carregarCronograma();
       }
     }
 
@@ -446,6 +1584,30 @@
       const ctx = document.getElementById('studyChart');
       if (!ctx) return;
       const dadosPorMateria = {};
+
+      // Cores predefinidas para cada matéria
+      const coresMaterias = {
+        'Anatomia': '#FF6B6B',
+        'Biologia': '#4ECDC4',
+        'Conhecimento Especifico': '#45B7D1',
+        'Direito Administrativo': '#96CEB4',
+        'Direito Constitucional': '#FFEEAD',
+        'Direito Penal': '#D4A5A5',
+        'Direito Penal Processual': '#9B59B6',
+        'Física': '#3498DB',
+        'Geografia': '#2ECC71',
+        'História': '#E67E22',
+        'Inglês': '#1ABC9C',
+        'legislação': '#F1C40F',
+        'Matemática': '#E74C3C',
+        'Português': '#34495E',
+        'Posicionamento': '#16A085',
+        'Proteção Radiológica': '#8E44AD',
+        'Redação': '#27AE60',
+        'Ressonância': '#2980B9',
+        'SUS': '#D35400',
+        'Tomografia': '#7F8C8D'
+      };
 
       // Inicializa o objeto dadosPorMateria com todas as matérias e datas
       chartData.forEach(estudo => {
@@ -496,11 +1658,13 @@
         return {
           label: materia,
           data: data,
-          borderColor: '#' + Math.floor(Math.random()*16777215).toString(16),
+          borderColor: coresMaterias[materia] || '#' + Math.floor(Math.random()*16777215).toString(16),
+          backgroundColor: coresMaterias[materia] || '#' + Math.floor(Math.random()*16777215).toString(16),
           fill: false,
           tension: 0.3,
           pointRadius: 6,
-          pointHoverRadius: 8
+          pointHoverRadius: 8,
+          borderWidth: 3
         };
       });
 
@@ -520,26 +1684,30 @@
             plugins: {
               legend: { 
                 display: true,
-                position: 'top'
+                position: 'top',
+                labels: {
+                  boxWidth: 20,
+                  padding: 15
+                }
               },
               tooltip: {
                 callbacks: {
                   label: function(context) {
                     const data = context.raw;
                     const materia = context.dataset.label;
-                    let tooltip = `${materia}\n`;
-                    tooltip += `Total: ${data.y} estudo(s)\n`;
+                    let tooltip = `\n ${materia}\n`;
+                    tooltip += `\n | Total: ${data.y} estudo(s)\n`;
                     if (data.video > 0) {
-                      tooltip += `Vídeo Aula: ${data.video}\n`;
+                      tooltip += `\n| Vídeo Aula: ${data.video}\n`;
                     }
                     if (data.questoes > 0) {
-                      tooltip += `Questões: ${data.questoes}\n`;
+                      tooltip += `\n| Questões: ${data.questoes}\n`;
                     }
                     if (data.revisao > 0) {
-                      tooltip += `Revisão: ${data.revisao}\n`;
+                      tooltip += `\n| Revisão: ${data.revisao}\n`;
                     }
                     if (data.revisao_questoes > 0) {
-                      tooltip += `Revisão por Questões: ${data.revisao_questoes}`;
+                      tooltip += `\n| Revisão por Questões: ${data.revisao_questoes}`;
                     }
                     return tooltip;
                   },
@@ -615,12 +1783,20 @@
       const tipo = document.getElementById('studyType').value;
       
       if (!materia) {
-        alert('Selecione uma matéria antes de registrar.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Selecione uma matéria antes de registrar.',
+        });
         return;
       }
       
       if (!tipo) {
-        alert('Selecione o tipo de estudo antes de registrar.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Selecione o tipo de estudo antes de registrar.',
+        });
         return;
       }
 
@@ -629,86 +1805,97 @@
       localStorage.setItem('estudos', JSON.stringify(chartData));
       criarOuAtualizarGrafico();
       
-      // Limpa os campos
       document.getElementById('studySubject').value = '';
       document.getElementById('studyType').value = '';
       
-      // Feedback visual
-      const toast = document.createElement('div');
-      toast.className = 'position-fixed bottom-0 end-0 p-3';
-      toast.style.zIndex = '5';
-      toast.innerHTML = `
-        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-          <div class="toast-header bg-success text-white">
-            <strong class="me-auto">Sucesso!</strong>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-          </div>
-          <div class="toast-body">
-            Estudo registrado com sucesso!
-          </div>
-        </div>
-      `;
-      document.body.appendChild(toast);
-      setTimeout(() => {
-        toast.remove();
-      }, 3000);
+      Swal.fire({
+        icon: 'success',
+        title: 'Sucesso!',
+        text: 'Estudo registrado com sucesso!',
+        timer: 2000,
+        showConfirmButton: false
+      });
     }
 
     function limparGrafico() {
-      if (confirm('Tem certeza que deseja limpar todo o histórico do gráfico?')) {
-        localStorage.removeItem('estudos');
-        chartData = [];
-        criarOuAtualizarGrafico();
-        // Feedback visual
-        const toast = document.createElement('div');
-        toast.className = 'position-fixed bottom-0 end-0 p-3';
-        toast.style.zIndex = '5';
-        toast.innerHTML = `
-          <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-danger text-white">
-              <strong class="me-auto">Histórico Limpo</strong>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-              O histórico de estudos foi limpo com sucesso!
-            </div>
-          </div>
-        `;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-          toast.remove();
-        }, 3000);
-      }
+      Swal.fire({
+        title: 'Tem certeza?',
+        text: "Todo o histórico será apagado permanentemente!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'limpar tudo!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.removeItem('estudos');
+          chartData = [];
+          criarOuAtualizarGrafico();
+          Swal.fire(
+            'Limpo!',
+            'O histórico foi limpo com sucesso.',
+            'success'
+          );
+        }
+      });
     }
 
     // Funções para gerenciar anotações
     function carregarAnotacoes() {
       const listaAnotacoes = document.getElementById('listaAnotacoes');
       const filtroMateria = document.getElementById('filtroMateria');
+      const buscaTitulo = document.getElementById('buscaTitulo');
       
       if (!listaAnotacoes || !filtroMateria) return;
 
       // Atualiza o filtro de matérias
-      const materias = [...new Set(anotacoes.map(a => a.materia))];
+      const materias = [...new Set(anotacoes.map(a => a.materia))].sort();
+      const materiaAtual = filtroMateria.value; // Guarda a matéria selecionada
+      
       filtroMateria.innerHTML = '<option value="">Todas as matérias</option>';
       materias.forEach(materia => {
         const option = document.createElement('option');
         option.value = materia;
         option.textContent = materia;
+        if (materia === materiaAtual) {
+          option.selected = true;
+        }
         filtroMateria.appendChild(option);
       });
 
       // Filtra as anotações
       const materiaSelecionada = filtroMateria.value;
-      const anotacoesFiltradas = materiaSelecionada 
-        ? anotacoes.filter(a => a.materia === materiaSelecionada)
-        : anotacoes;
+      const textoBusca = buscaTitulo.value.toLowerCase().trim();
+      
+      let anotacoesFiltradas = [...anotacoes]; // Cria uma cópia do array
+      
+      // Aplica filtro de matéria
+      if (materiaSelecionada) {
+        anotacoesFiltradas = anotacoesFiltradas.filter(a => a.materia === materiaSelecionada);
+      }
+      
+      // Aplica filtro de título
+      if (textoBusca) {
+        anotacoesFiltradas = anotacoesFiltradas.filter(a => 
+          a.titulo.toLowerCase().includes(textoBusca)
+        );
+      }
 
       // Ordena por data mais recente
       anotacoesFiltradas.sort((a, b) => new Date(b.data) - new Date(a.data));
 
       // Limpa e preenche a lista
       listaAnotacoes.innerHTML = '';
+      
+      if (anotacoesFiltradas.length === 0) {
+        const item = document.createElement('div');
+        item.className = 'list-group-item text-center text-muted';
+        item.innerHTML = 'Nenhuma anotação encontrada';
+        listaAnotacoes.appendChild(item);
+        return;
+      }
+
       anotacoesFiltradas.forEach((anotacao, index) => {
         const item = document.createElement('div');
         item.className = 'list-group-item';
@@ -717,7 +1904,7 @@
             <h5 class="mb-1">${anotacao.titulo}</h5>
             <small class="text-muted">${formatarData(anotacao.data)}</small>
           </div>
-          <p class="mb-1">${anotacao.materia}</p>
+          <p class="mb-1 text-primary">${anotacao.materia}</p>
           <p class="mb-1">${anotacao.conteudo}</p>
           <div class="d-flex justify-content-end">
             <button class="btn btn-outline-danger btn-sm me-2" onclick="excluirAnotacao(${index})">
@@ -771,11 +1958,637 @@
     }
 
     function excluirAnotacao(index) {
-      if (confirm('Tem certeza que deseja excluir esta anotação?')) {
-        anotacoes.splice(index, 1);
-        localStorage.setItem('anotacoes', JSON.stringify(anotacoes));
-        carregarAnotacoes();
+      Swal.fire({
+        title: 'Tem certeza?',
+        text: "Esta ação não poderá ser revertida!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'excluir!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          anotacoes.splice(index, 1);
+          localStorage.setItem('anotacoes', JSON.stringify(anotacoes));
+          carregarAnotacoes();
+          Swal.fire(
+            'Excluído!',
+            'A anotação foi excluída com sucesso.',
+            'success'
+          );
+        }
+      });
+    }
+
+    // Funções para gerenciar Flash Cards
+    function carregarFlashcards() {
+      const listaGerenciamento = document.getElementById('listaGerenciamentoFlashcards');
+      const filtroMateria = document.getElementById('filtroFlashcardMateria');
+      const filtroCategoria = document.getElementById('filtroFlashcardCategoria');
+      const flashcardAtual = document.getElementById('flashcardAtual');
+      
+      if (!listaGerenciamento || !filtroMateria || !filtroCategoria) return;
+
+      // Atualiza os filtros
+      const materias = [...new Set(flashcards.map(f => f.materia))].sort();
+      const categorias = [...new Set(flashcards.map(f => f.categoria))].sort();
+      
+      // Atualiza filtro de matérias
+      const materiaAtual = filtroMateria.value;
+      filtroMateria.innerHTML = '<option value="">Todas as matérias</option>';
+      materias.forEach(materia => {
+        const option = document.createElement('option');
+        option.value = materia;
+        option.textContent = materia;
+        if (materia === materiaAtual) {
+          option.selected = true;
+        }
+        filtroMateria.appendChild(option);
+      });
+
+      // Atualiza filtro de categorias
+      const categoriaAtual = filtroCategoria.value;
+      filtroCategoria.innerHTML = '<option value="">Todas as categorias</option>';
+      categorias.forEach(categoria => {
+        const option = document.createElement('option');
+        option.value = categoria;
+        option.textContent = categoria;
+        if (categoria === categoriaAtual) {
+          option.selected = true;
+        }
+        filtroCategoria.appendChild(option);
+      });
+
+      // Filtra os flash cards
+      const materiaSelecionada = filtroMateria.value;
+      const categoriaSelecionada = filtroCategoria.value;
+      
+      let flashcardsFiltrados = [...flashcards];
+      
+      if (materiaSelecionada) {
+        flashcardsFiltrados = flashcardsFiltrados.filter(f => f.materia === materiaSelecionada);
       }
+      
+      if (categoriaSelecionada) {
+        flashcardsFiltrados = flashcardsFiltrados.filter(f => f.categoria === categoriaSelecionada);
+      }
+
+      // Ordena por data mais recente
+      flashcardsFiltrados.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+      // Limpa e preenche a lista de gerenciamento
+      listaGerenciamento.innerHTML = '';
+      
+      if (flashcardsFiltrados.length === 0) {
+        const item = document.createElement('div');
+        item.className = 'list-group-item text-center text-muted';
+        item.innerHTML = 'Nenhum flash card encontrado';
+        listaGerenciamento.appendChild(item);
+      } else {
+        flashcardsFiltrados.forEach((flashcard, index) => {
+          const item = document.createElement('div');
+          item.className = 'list-group-item';
+          item.innerHTML = `
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="mb-1">${flashcard.pergunta}</h5>
+              <small class="text-muted">${formatarData(flashcard.data)}</small>
+            </div>
+            <p class="mb-1 text-primary">${flashcard.materia} - ${flashcard.categoria}</p>
+            <p class="mb-1">${flashcard.resposta}</p>
+            <div class="d-flex justify-content-end gap-2">
+              <button class="btn btn-outline-primary btn-sm" onclick="editarFlashcard(${index})">
+                <i class="bi bi-pencil"></i> Editar
+              </button>
+              <button class="btn btn-outline-danger btn-sm" onclick="excluirFlashcard(${index})">
+                <i class="bi bi-trash"></i> Excluir
+              </button>
+            </div>
+          `;
+          listaGerenciamento.appendChild(item);
+        });
+      }
+
+      // Atualiza a lista de flash cards para estudo
+      flashcardsAtuais = [...flashcardsFiltrados];
+      if (flashcardsAtuais.length > 0) {
+        mostrarProximoFlashcard();
+      } else if (flashcardAtual) {
+        flashcardAtual.style.display = 'none';
+      }
+    }
+
+    function editarFlashcard(index) {
+      const flashcard = flashcards[index];
+      if (!flashcard) return;
+
+      // Preenche o formulário com os dados do flash card
+      document.getElementById('flashcardMateria').value = flashcard.materia;
+      document.getElementById('flashcardCategoria').value = flashcard.categoria;
+      document.getElementById('flashcardPergunta').value = flashcard.pergunta;
+      document.getElementById('flashcardResposta').value = flashcard.resposta;
+
+      // Muda para a aba de novo flash card
+      mostrarAbaFlashcard('novo');
+
+      // Adiciona um botão de salvar alterações
+      const form = document.getElementById('flashcardForm');
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.innerHTML = '<i class="bi bi-save"></i> Salvar Alterações';
+      
+      // Remove o evento de submit anterior
+      const newForm = form.cloneNode(true);
+      form.parentNode.replaceChild(newForm, form);
+      
+      // Adiciona o novo evento de submit
+      newForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Atualiza o flash card
+        flashcards[index] = {
+          materia: document.getElementById('flashcardMateria').value,
+          categoria: document.getElementById('flashcardCategoria').value,
+          pergunta: document.getElementById('flashcardPergunta').value,
+          resposta: document.getElementById('flashcardResposta').value,
+          data: flashcard.data // Mantém a data original
+        };
+
+        // Salva no localStorage
+        localStorage.setItem('flashcards', JSON.stringify(flashcards));
+        
+        // Limpa o formulário
+        newForm.reset();
+        
+        // Restaura o botão original
+        submitButton.innerHTML = '<i class="bi bi-save"></i> Salvar Flash Card';
+        
+        // Volta para a aba de gerenciamento
+        mostrarAbaFlashcard('gerenciar');
+        
+        // Atualiza a lista
+        carregarFlashcards();
+        
+        // Feedback visual
+        const toast = document.createElement('div');
+        toast.className = 'position-fixed bottom-0 end-0 p-3';
+        toast.style.zIndex = '5';
+        toast.innerHTML = `
+          <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+              <strong class="me-auto">Sucesso!</strong>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+              Flash Card atualizado com sucesso!
+            </div>
+          </div>
+        `;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+      });
+    }
+
+    function salvarFlashcard(e) {
+      e.preventDefault();
+      
+      const flashcard = {
+        materia: document.getElementById('flashcardMateria').value,
+        categoria: document.getElementById('flashcardCategoria').value,
+        pergunta: document.getElementById('flashcardPergunta').value,
+        resposta: document.getElementById('flashcardResposta').value,
+        data: new Date().toISOString().split('T')[0]
+      };
+
+      flashcards.push(flashcard);
+      localStorage.setItem('flashcards', JSON.stringify(flashcards));
+      
+      // Limpa o formulário
+      e.target.reset();
+      
+      // Atualiza a lista
+      carregarFlashcards();
+      
+      // Feedback visual
+      const toast = document.createElement('div');
+      toast.className = 'position-fixed bottom-0 end-0 p-3';
+      toast.style.zIndex = '5';
+      toast.innerHTML = `
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header bg-success text-white">
+            <strong class="me-auto">Sucesso!</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+            Flash Card salvo com sucesso!
+          </div>
+        </div>
+      `;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    function excluirFlashcard(index) {
+      Swal.fire({
+        title: 'Tem certeza?',
+        text: "Esta ação não poderá ser revertida!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'excluir!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          flashcards.splice(index, 1);
+          localStorage.setItem('flashcards', JSON.stringify(flashcards));
+          carregarFlashcards();
+          Swal.fire(
+            'Excluído!',
+            'O flash card foi excluído com sucesso.',
+            'success'
+          );
+        }
+      });
+    }
+
+    function mostrarProximoFlashcard() {
+      const flashcardAtual = document.getElementById('flashcardAtual');
+      const perguntaAtual = document.getElementById('flashcardPerguntaAtual');
+      const respostaAtual = document.getElementById('flashcardRespostaAtual');
+      const categoriaAtual = document.getElementById('flashcardCategoriaAtual');
+      
+      if (!flashcardAtual || !perguntaAtual || !respostaAtual || !categoriaAtual) return;
+      
+      if (flashcardsAtuais.length === 0) {
+        flashcardAtual.style.display = 'none';
+        return;
+      }
+
+      const flashcard = flashcardsAtuais[0];
+      perguntaAtual.textContent = flashcard.pergunta;
+      respostaAtual.textContent = flashcard.resposta;
+      categoriaAtual.textContent = flashcard.categoria;
+      respostaAtual.style.display = 'none';
+      flashcardAtual.style.display = 'block';
+    }
+
+    function mostrarResposta() {
+      const respostaAtual = document.getElementById('flashcardRespostaAtual');
+      respostaAtual.style.display = 'block';
+    }
+
+    function avancarFlashcard() {
+      flashcardsAtuais.shift();
+      mostrarProximoFlashcard();
+    }
+
+    function reiniciarFlashcards() {
+      flashcardsAtuais = [...flashcards];
+      mostrarProximoFlashcard();
+    }
+
+    function mostrarAbaFlashcard(aba) {
+      // Esconde todos os conteúdos
+      document.querySelectorAll('.conteudo-aba').forEach(conteudo => {
+        conteudo.style.display = 'none';
+      });
+
+      // Mostra o conteúdo selecionado
+      document.getElementById(`conteudo-${aba}`).style.display = 'block';
+
+      // Atualiza os botões
+      document.querySelectorAll('.btn-outline-primary').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Encontra e ativa o botão correto
+      const botaoAtual = document.querySelector(`button[onclick="mostrarAbaFlashcard('${aba}')"]`);
+      if (botaoAtual) {
+        botaoAtual.classList.add('active');
+      }
+
+      // Salva a aba atual
+      abaFlashcardAtual = aba;
+
+      // Recarrega os flash cards se necessário
+      if (aba === 'estudo' || aba === 'gerenciar') {
+        carregarFlashcards();
+      }
+    }
+
+    // Funções para gerenciar o cronograma
+    let calendar = null;
+    let atividadeSelecionada = null;
+
+    function inicializarCalendario() {
+      const calendarEl = document.getElementById('calendario');
+      if (!calendarEl) return;
+
+      calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'pt-br',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        buttonText: {
+          today: 'Hoje',
+          month: 'Mês',
+          week: 'Semana',
+          day: 'Dia'
+        },
+        events: cronograma.map(atividade => ({
+          id: cronograma.indexOf(atividade),
+          title: atividade.titulo,
+          start: `${atividade.data}T${atividade.hora}`,
+          className: atividade.tipo,
+          backgroundColor: getCorTipo(atividade.tipo),
+          borderColor: getCorTipo(atividade.tipo),
+          extendedProps: {
+            materia: atividade.materia,
+            tipo: atividade.tipo,
+            descricao: atividade.descricao
+          }
+        })),
+        eventClick: function(info) {
+          atividadeSelecionada = info.event;
+          mostrarDetalhesAtividade(info.event);
+        },
+        dateClick: function(info) {
+          document.getElementById('atividadeData').value = info.dateStr;
+        },
+        dayMaxEvents: true,
+        height: 'auto',
+        contentHeight: 600,
+        eventTimeFormat: {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        },
+        eventDisplay: 'block',
+        eventDidMount: function(info) {
+          info.el.title = `${info.event.title}\n${info.event.extendedProps.materia}\n${info.event.extendedProps.tipo}`;
+        },
+        slotEventOverlap: true,
+        eventOverlap: true,
+        allDaySlot: false,
+        slotMinTime: '00:00:00',
+        slotMaxTime: '24:00:00',
+        slotDuration: '00:30:00',
+        slotLabelInterval: '01:00',
+        slotLabelFormat: {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        },
+        views: {
+          timeGridWeek: {
+            slotEventOverlap: true,
+            eventOverlap: true
+          },
+          timeGridDay: {
+            slotEventOverlap: true,
+            eventOverlap: true
+          }
+        }
+      });
+
+      calendar.render();
+    }
+
+    function getCorTipo(tipo) {
+      const cores = {
+        'video': '#0d6efd',
+        'questoes': '#198754',
+        'revisao': '#ffc107',
+        'revisao_questoes': '#0dcaf0'
+      };
+      return cores[tipo] || '#6c757d';
+    }
+
+    function mostrarDetalhesAtividade(evento) {
+      const modalEl = document.getElementById('atividadeModal');
+      const modal = new bootstrap.Modal(modalEl);
+      
+      document.getElementById('modalTitulo').textContent = evento.title;
+      document.getElementById('modalMateria').textContent = evento.extendedProps.materia;
+      document.getElementById('modalTipo').textContent = getTipoTexto(evento.extendedProps.tipo);
+      document.getElementById('modalData').textContent = formatarData(evento.start.toISOString().split('T')[0]);
+      document.getElementById('modalHora').textContent = evento.start.toTimeString().slice(0, 5);
+      document.getElementById('modalDescricao').textContent = evento.extendedProps.descricao || 'Sem descrição';
+
+      // Remove eventos anteriores
+      const btnEditar = document.getElementById('btnEditarAtividade');
+      const btnExcluir = document.getElementById('btnExcluirAtividade');
+      const btnClose = modalEl.querySelector('.btn-close');
+
+      const newBtnEditar = btnEditar.cloneNode(true);
+      const newBtnExcluir = btnExcluir.cloneNode(true);
+      const newBtnClose = btnClose.cloneNode(true);
+
+      btnEditar.parentNode.replaceChild(newBtnEditar, btnEditar);
+      btnExcluir.parentNode.replaceChild(newBtnExcluir, btnExcluir);
+      btnClose.parentNode.replaceChild(newBtnClose, btnClose);
+
+      newBtnEditar.onclick = function() {
+        modal.hide();
+        setTimeout(() => {
+          editarAtividade(evento.id);
+        }, 150);
+      };
+
+      newBtnExcluir.onclick = function() {
+        modal.hide();
+        setTimeout(() => {
+          excluirAtividade(evento.id);
+        }, 150);
+      };
+
+      newBtnClose.onclick = function() {
+        modal.hide();
+      };
+
+      modalEl.addEventListener('hidden.bs.modal', function() {
+        modalEl.removeAttribute('aria-hidden');
+        modalEl.removeAttribute('style');
+      });
+
+      modal.show();
+    }
+
+    function getTipoTexto(tipo) {
+      const tipos = {
+        'video': 'Vídeo Aula',
+        'questoes': 'Questões',
+        'revisao': 'Revisão',
+        'revisao_questoes': 'Revisão por Questões'
+      };
+      return tipos[tipo] || tipo;
+    }
+
+    function carregarCronograma() {
+      if (calendar) {
+        calendar.removeAllEvents();
+        calendar.addEventSource(cronograma.map(atividade => ({
+          id: cronograma.indexOf(atividade),
+          title: atividade.titulo,
+          start: `${atividade.data}T${atividade.hora}`,
+          className: atividade.tipo,
+          backgroundColor: getCorTipo(atividade.tipo),
+          borderColor: getCorTipo(atividade.tipo),
+          extendedProps: {
+            materia: atividade.materia,
+            tipo: atividade.tipo,
+            descricao: atividade.descricao
+          }
+        })));
+      } else {
+        inicializarCalendario();
+      }
+    }
+
+    function salvarAtividade(e) {
+      e.preventDefault();
+      
+      const atividade = {
+        materia: document.getElementById('atividadeMateria').value,
+        data: document.getElementById('atividadeData').value,
+        hora: document.getElementById('atividadeHora').value,
+        titulo: document.getElementById('atividadeTitulo').value,
+        tipo: document.getElementById('atividadeTipo').value,
+        descricao: document.getElementById('atividadeDescricao').value
+      };
+
+      cronograma.push(atividade);
+      localStorage.setItem('cronograma', JSON.stringify(cronograma));
+      
+      // Limpa o formulário
+      e.target.reset();
+      
+      // Atualiza o calendário
+      carregarCronograma();
+      
+      // Feedback visual
+      const toast = document.createElement('div');
+      toast.className = 'position-fixed bottom-0 end-0 p-3';
+      toast.style.zIndex = '5';
+      toast.innerHTML = `
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header bg-success text-white">
+            <strong class="me-auto">Sucesso!</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+            Atividade salva com sucesso!
+          </div>
+        </div>
+      `;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    function editarAtividade(index) {
+      const atividade = cronograma[index];
+      if (!atividade) return;
+
+      // Preenche o formulário com os dados da atividade
+      document.getElementById('atividadeMateria').value = atividade.materia;
+      document.getElementById('atividadeData').value = atividade.data;
+      document.getElementById('atividadeHora').value = atividade.hora;
+      document.getElementById('atividadeTitulo').value = atividade.titulo;
+      document.getElementById('atividadeTipo').value = atividade.tipo;
+      document.getElementById('atividadeDescricao').value = atividade.descricao;
+
+      // Atualiza o botão de submit
+      const form = document.getElementById('cronogramaForm');
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.innerHTML = '<i class="bi bi-save"></i> Salvar Alterações';
+      
+      // Remove o evento de submit anterior
+      const newForm = form.cloneNode(true);
+      form.parentNode.replaceChild(newForm, form);
+      
+      // Adiciona o novo evento de submit
+      newForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Atualiza a atividade
+        cronograma[index] = {
+          materia: document.getElementById('atividadeMateria').value,
+          data: document.getElementById('atividadeData').value,
+          hora: document.getElementById('atividadeHora').value,
+          titulo: document.getElementById('atividadeTitulo').value,
+          tipo: document.getElementById('atividadeTipo').value,
+          descricao: document.getElementById('atividadeDescricao').value
+        };
+
+        // Salva no localStorage
+        localStorage.setItem('cronograma', JSON.stringify(cronograma));
+        
+        // Limpa o formulário
+        newForm.reset();
+        
+        // Restaura o botão original
+        submitButton.innerHTML = '<i class="bi bi-save"></i> Salvar Atividade';
+        
+        // Atualiza o calendário
+        carregarCronograma();
+        
+        // Feedback visual
+        const toast = document.createElement('div');
+        toast.className = 'position-fixed bottom-0 end-0 p-3';
+        toast.style.zIndex = '5';
+        toast.innerHTML = `
+          <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+              <strong class="me-auto">Sucesso!</strong>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+              Atividade atualizada com sucesso!
+            </div>
+          </div>
+        `;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+      });
+    }
+
+    function excluirAtividade(index) {
+      Swal.fire({
+        title: 'Tem certeza?',
+        text: "Esta ação não poderá ser revertida!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'excluir!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          cronograma.splice(index, 1);
+          localStorage.setItem('cronograma', JSON.stringify(cronograma));
+          carregarCronograma();
+          Swal.fire(
+            'Excluído!',
+            'A atividade foi excluída com sucesso.',
+            'success'
+          );
+        }
+      });
     }
 
     // Quando o documento estiver carregado
@@ -853,7 +2666,107 @@
       if (filtroMateria) {
         filtroMateria.addEventListener('change', carregarAnotacoes);
       }
+
+      // Configurar o campo de busca
+      const buscaTitulo = document.getElementById('buscaTitulo');
+      if (buscaTitulo) {
+        buscaTitulo.addEventListener('input', carregarAnotacoes);
+      }
+
+      // Configurar o formulário de flash cards
+      const flashcardForm = document.getElementById('flashcardForm');
+      if (flashcardForm) {
+        flashcardForm.addEventListener('submit', salvarFlashcard);
+      }
+
+      // Configurar os filtros de flash cards
+      const filtroFlashcardMateria = document.getElementById('filtroFlashcardMateria');
+      const filtroFlashcardCategoria = document.getElementById('filtroFlashcardCategoria');
+      
+      if (filtroFlashcardMateria) {
+        filtroFlashcardMateria.addEventListener('change', carregarFlashcards);
+      }
+      
+      if (filtroFlashcardCategoria) {
+        filtroFlashcardCategoria.addEventListener('change', carregarFlashcards);
+      }
+
+      // Inicializar os flash cards
+      carregarFlashcards();
+      mostrarAbaFlashcard('estudo');
+
+      // Configurar o formulário de cronograma
+      const cronogramaForm = document.getElementById('cronogramaForm');
+      if (cronogramaForm) {
+        cronogramaForm.addEventListener('submit', salvarAtividade);
+      }
+
+      // Configurar os filtros do cronograma
+      const filtroCronogramaMateria = document.getElementById('filtroCronogramaMateria');
+      const filtroCronogramaTipo = document.getElementById('filtroCronogramaTipo');
+      
+      if (filtroCronogramaMateria) {
+        filtroCronogramaMateria.addEventListener('change', carregarCronograma);
+      }
+      
+      if (filtroCronogramaTipo) {
+        filtroCronogramaTipo.addEventListener('change', carregarCronograma);
+      }
+
+      // Inicializar o calendário
+      inicializarCalendario();
+
+      // Inicializa o tema
+      initializeTheme();
+
+      // Configura o botão de tema
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
     });
+
+    // Funções para gerenciar o tema
+    function initializeTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+    }
+
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeIcon(newTheme);
+    }
+
+    function updateThemeIcon(theme) {
+      const icon = document.querySelector('#themeToggle i');
+      if (theme === 'dark') {
+        icon.className = 'bi bi-moon-fill';
+      } else {
+        icon.className = 'bi bi-sun-fill';
+      }
+    }
+
+    // Função para criar toasts personalizados
+    function showToast(message, type = 'success') {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+      });
+
+      Toast.fire({
+        icon: type,
+        title: message
+      });
+    }
   </script>
 </body>
 </html>
