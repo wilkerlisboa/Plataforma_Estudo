@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plataforma de Estudo</title>
   <link rel="icon" href="https://static-00.iconduck.com/assets.00/electron-icon-1889x2048-istwe9sw.png" type="image/png">
+  <!-- Preload de fontes críticas -->
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/fonts/bootstrap-icons.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- Carregamento otimizado de CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
@@ -1963,76 +1966,88 @@
 
     // Funções para gerenciar anotações
     function carregarAnotacoes() {
-      const listaAnotacoes = document.getElementById('listaAnotacoes');
-      const filtroMateria = document.getElementById('filtroMateria');
-      const buscaTitulo = document.getElementById('buscaTitulo');
-      
-      if (!listaAnotacoes || !filtroMateria) return;
-
-      // Atualiza o filtro de matérias
-      const materias = [...new Set(anotacoes.map(a => a.materia))].sort();
-      const materiaAtual = filtroMateria.value;
-      
-      filtroMateria.innerHTML = '<option value="">Todas as matérias</option>';
-      materias.forEach(materia => {
-        const option = document.createElement('option');
-        option.value = materia;
-        option.textContent = materia;
-        if (materia === materiaAtual) {
-          option.selected = true;
+      try {
+        const listaAnotacoes = document.getElementById('listaAnotacoes');
+        const filtroMateria = document.getElementById('filtroMateria');
+        const buscaTitulo = document.getElementById('buscaTitulo');
+        
+        if (!listaAnotacoes || !filtroMateria) {
+          console.error('Elementos necessários não encontrados');
+          return;
         }
-        filtroMateria.appendChild(option);
-      });
 
-      // Filtra as anotações
-      const materiaSelecionada = filtroMateria.value;
-      const textoBusca = buscaTitulo.value.toLowerCase().trim();
-      
-      let anotacoesFiltradas = [...anotacoes];
-      
-      if (materiaSelecionada) {
-        anotacoesFiltradas = anotacoesFiltradas.filter(a => a.materia === materiaSelecionada);
+        // Atualiza o filtro de matérias
+        const materias = [...new Set(anotacoes.map(a => a.materia))].sort();
+        const materiaAtual = filtroMateria.value;
+        
+        filtroMateria.innerHTML = '<option value="">Todas as matérias</option>';
+        materias.forEach(materia => {
+          const option = document.createElement('option');
+          option.value = materia;
+          option.textContent = materia;
+          if (materia === materiaAtual) {
+            option.selected = true;
+          }
+          filtroMateria.appendChild(option);
+        });
+
+        // Filtra as anotações
+        const materiaSelecionada = filtroMateria.value;
+        const textoBusca = buscaTitulo.value.toLowerCase().trim();
+        
+        let anotacoesFiltradas = [...anotacoes];
+        
+        if (materiaSelecionada) {
+          anotacoesFiltradas = anotacoesFiltradas.filter(a => a.materia === materiaSelecionada);
+        }
+        
+        if (textoBusca) {
+          anotacoesFiltradas = anotacoesFiltradas.filter(a => 
+            a.titulo.toLowerCase().includes(textoBusca)
+          );
+        }
+
+        anotacoesFiltradas.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+        listaAnotacoes.innerHTML = '';
+        
+        if (anotacoesFiltradas.length === 0) {
+          const item = document.createElement('div');
+          item.className = 'list-group-item text-center text-muted';
+          item.innerHTML = 'Nenhuma anotação encontrada';
+          listaAnotacoes.appendChild(item);
+          return;
+        }
+
+        anotacoesFiltradas.forEach((anotacao, index) => {
+          try {
+            const item = document.createElement('div');
+            item.className = 'list-group-item';
+            item.innerHTML = `
+              <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-1">${anotacao.titulo}</h5>
+                <small class="text-muted">${formatarData(anotacao.data)}</small>
+              </div>
+              <p class="mb-1 text-primary">${anotacao.materia}</p>
+              <div class="mb-3 markdown-content">${marked.parse(anotacao.conteudo)}</div>
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-outline-primary btn-sm me-2" onclick="editarAnotacao(${index})">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-outline-danger btn-sm" onclick="excluirAnotacao(${index})">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            `;
+            listaAnotacoes.appendChild(item);
+          } catch (error) {
+            console.error('Erro ao renderizar anotação:', error);
+          }
+        });
+      } catch (error) {
+        console.error('Erro ao carregar anotações:', error);
+        showToast('Erro ao carregar anotações', 'error');
       }
-      
-      if (textoBusca) {
-        anotacoesFiltradas = anotacoesFiltradas.filter(a => 
-          a.titulo.toLowerCase().includes(textoBusca)
-        );
-      }
-
-      anotacoesFiltradas.sort((a, b) => new Date(b.data) - new Date(a.data));
-
-      listaAnotacoes.innerHTML = '';
-      
-      if (anotacoesFiltradas.length === 0) {
-        const item = document.createElement('div');
-        item.className = 'list-group-item text-center text-muted';
-        item.innerHTML = 'Nenhuma anotação encontrada';
-        listaAnotacoes.appendChild(item);
-        return;
-      }
-
-      anotacoesFiltradas.forEach((anotacao, index) => {
-        const item = document.createElement('div');
-        item.className = 'list-group-item';
-        item.innerHTML = `
-          <div class="d-flex justify-content-between align-items-center">
-            <h5 class="mb-1">${anotacao.titulo}</h5>
-            <small class="text-muted">${formatarData(anotacao.data)}</small>
-          </div>
-          <p class="mb-1 text-primary">${anotacao.materia}</p>
-          <div class="mb-3 markdown-content">${marked.parse(anotacao.conteudo)}</div>
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-outline-primary btn-sm me-2" onclick="editarAnotacao(${index})">
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button class="btn btn-outline-danger btn-sm" onclick="excluirAnotacao(${index})">
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
-        `;
-        listaAnotacoes.appendChild(item);
-      });
     }
 
     function salvarAnotacao(e) {
@@ -2084,19 +2099,33 @@
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'excluir!',
+        confirmButtonText: 'Sim, excluir!',
         cancelButtonText: 'Cancelar'
       }).then((result) => {
         if (result.isConfirmed) {
+          // Remove a anotação do array
           anotacoes.splice(index, 1);
+          
+          // Atualiza o localStorage
           localStorage.setItem('anotacoes', JSON.stringify(anotacoes));
+          
+          // Atualiza a lista de anotações
           carregarAnotacoes();
+          
+          // Mostra mensagem de sucesso
           Swal.fire(
             'Excluído!',
             'A anotação foi excluída com sucesso.',
             'success'
           );
         }
+      }).catch(error => {
+        console.error('Erro ao excluir anotação:', error);
+        Swal.fire(
+          'Erro!',
+          'Ocorreu um erro ao excluir a anotação.',
+          'error'
+        );
       });
     }
 
