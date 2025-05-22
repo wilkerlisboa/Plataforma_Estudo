@@ -267,6 +267,43 @@
       background-color: #3d3d3d;
     }
 
+    /* Estilos específicos para as horas no modo dark */
+    [data-theme="dark"] .fc .fc-timegrid-slot-label {
+      color: #e0e0e0 !important;
+    }
+
+    [data-theme="dark"] .fc .fc-timegrid-slot-label-cushion {
+      color: #e0e0e0 !important;
+    }
+
+    [data-theme="dark"] .fc .fc-timegrid-axis {
+      color: #e0e0e0 !important;
+    }
+
+    [data-theme="dark"] .fc .fc-timegrid-axis-cushion {
+      color: #e0e0e0 !important;
+    }
+
+    [data-theme="dark"] .fc .fc-timegrid-slot {
+      border-color: #333 !important;
+    }
+
+    [data-theme="dark"] .fc .fc-timegrid-axis {
+      border-color: #333 !important;
+    }
+
+    [data-theme="dark"] .fc .fc-timegrid-slot-minor {
+      border-color: #333 !important;
+    }
+
+    [data-theme="dark"] .fc .fc-timegrid-slot-lane {
+      border-color: #333 !important;
+    }
+
+    [data-theme="dark"] .fc .fc-timegrid-slot-label-frame {
+      color: #e0e0e0 !important;
+    }
+
     /* Estilos para eventos no tema escuro */
     [data-theme="dark"] .fc-event.video {
       background-color: #1a3a5f;
@@ -284,7 +321,7 @@
       color: #e0e0e0;
     }
 
-    [data-theme="dark"] .fc-event.revisao_questoes {
+    [data-theme="dark"] .fc-event.leitura {
       background-color: #1a5f5f;
       border-color: #1a5f5f;
     }
@@ -956,7 +993,7 @@
                 <option value="video">Vídeo Aula</option>
                 <option value="questoes">Questões</option>
                 <option value="revisao">Revisão</option>
-                <option value="revisao_questoes">Revisão por Questões</option>
+                <option value="leitura">Leitura</option>
               </select>
             </div>
           </div>
@@ -998,7 +1035,35 @@
                   <i class="bi bi-trash"></i> Limpar Histórico
                 </button>
               </div>
-              <div class="chart-container">
+
+              <!-- Filtros do Gráfico -->
+              <div class="row mb-3">
+                <div class="col-md-4">
+                  <select class="form-select" id="filtroTipoEstudo">
+                    <option value="todos">Todos os tipos</option>
+                    <option value="video">Vídeo Aula</option>
+                    <option value="questoes">Questões</option>
+                    <option value="revisao">Revisão</option>
+                    <option value="leitura">Leitura</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <select class="form-select" id="filtroPeriodo">
+                    <option value="7">Últimos 7 dias</option>
+                    <option value="15">Últimos 15 dias</option>
+                    <option value="30">Últimos 30 dias</option>
+                    <option value="90">Últimos 90 dias</option>
+                    <option value="todos">Todo o período</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <button class="btn btn-primary w-100" onclick="aplicarFiltrosGrafico()">
+                    <i class="bi bi-funnel"></i> Aplicar Filtros
+                  </button>
+                </div>
+              </div>
+
+              <div class="chart-container" style="height: 300px;">
                 <canvas id="studyChart"></canvas>
               </div>
             </div>
@@ -1350,7 +1415,7 @@
                     <option value="video">Vídeo Aula</option>
                     <option value="questoes">Questões</option>
                     <option value="revisao">Revisão</option>
-                    <option value="revisao_questoes">Revisão por Questões</option>
+                    <option value="leitura">Leitura</option>
                   </select>
                 </div>
                 <div class="col-12">
@@ -1384,7 +1449,7 @@
                     <option value="video">Vídeo Aula</option>
                     <option value="questoes">Questões</option>
                     <option value="revisao">Revisão</option>
-                    <option value="revisao_questoes">Revisão por Questões</option>
+                    <option value="leitura">Leitura</option>
                   </select>
                 </div>
               </div>
@@ -1582,11 +1647,14 @@
     }
 
     function criarOuAtualizarGrafico() {
+      atualizarGrafico(chartData);
+    }
+
+    function atualizarGrafico(dados) {
       const ctx = document.getElementById('studyChart');
       if (!ctx) return;
+      
       const dadosPorMateria = {};
-
-      // Cores predefinidas para cada matéria
       const coresMaterias = {
         'Anatomia': '#FF6B6B',
         'Biologia': '#4ECDC4',
@@ -1607,20 +1675,21 @@
         'Redação': '#27AE60',
         'Ressonância': '#2980B9',
         'SUS': '#D35400',
-        'Tomografia': '#7F8C8D'
+        'Tomografia': '#7F8C8D',
+        'leitura': '#0dcaf0'
       };
 
-      // Inicializa o objeto dadosPorMateria com todas as matérias e datas
-      chartData.forEach(estudo => {
+      // Inicializa o objeto dadosPorMateria
+      dados.forEach(estudo => {
         if (!dadosPorMateria[estudo.materia]) {
           dadosPorMateria[estudo.materia] = {};
         }
       });
 
       // Obtém todas as datas únicas
-      const todasDatas = [...new Set(chartData.map(e => e.data))].sort();
+      const todasDatas = [...new Set(dados.map(e => e.data))].sort();
 
-      // Inicializa todas as combinações de matéria e data com valores zerados
+      // Inicializa todas as combinações de matéria e data
       Object.keys(dadosPorMateria).forEach(materia => {
         todasDatas.forEach(data => {
           if (!dadosPorMateria[materia][data]) {
@@ -1628,14 +1697,14 @@
               video: 0,
               questoes: 0,
               revisao: 0,
-              revisao_questoes: 0
+              leitura: 0
             };
           }
         });
       });
 
-      // Agora incrementa os contadores
-      chartData.forEach(estudo => {
+      // Incrementa os contadores
+      dados.forEach(estudo => {
         if (dadosPorMateria[estudo.materia] && 
             dadosPorMateria[estudo.materia][estudo.data] && 
             dadosPorMateria[estudo.materia][estudo.data][estudo.tipo] !== undefined) {
@@ -1648,11 +1717,11 @@
           const registro = dadosPorMateria[materia][data];
           return {
             x: data,
-            y: registro.video + registro.questoes + registro.revisao + registro.revisao_questoes,
+            y: registro.video + registro.questoes + registro.revisao + registro.leitura,
             video: registro.video,
             questoes: registro.questoes,
             revisao: registro.revisao,
-            revisao_questoes: registro.revisao_questoes
+            leitura: registro.leitura
           };
         });
 
@@ -1707,8 +1776,8 @@
                     if (data.revisao > 0) {
                       tooltip += `\n| Revisão: ${data.revisao}\n`;
                     }
-                    if (data.revisao_questoes > 0) {
-                      tooltip += `\n| Revisão por Questões: ${data.revisao_questoes}`;
+                    if (data.leitura > 0) {
+                      tooltip += `\n| Leitura: ${data.leitura}`;
                     }
                     return tooltip;
                   },
@@ -1908,7 +1977,10 @@
           <p class="mb-1 text-primary">${anotacao.materia}</p>
           <p class="mb-1">${anotacao.conteudo}</p>
           <div class="d-flex justify-content-end">
-            <button class="btn btn-outline-danger btn-sm me-2" onclick="excluirAnotacao(${index})">
+            <button class="btn btn-outline-primary btn-sm me-2" onclick="editarAnotacao(${index})">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-outline-danger btn-sm" onclick="excluirAnotacao(${index})">
               <i class="bi bi-trash"></i>
             </button>
           </div>
@@ -1979,6 +2051,53 @@
             'success'
           );
         }
+      });
+    }
+
+    function editarAnotacao(index) {
+      const anotacao = anotacoes[index];
+      if (!anotacao) return;
+
+      // Preenche o formulário com os dados da anotação
+      document.getElementById('anotacaoMateria').value = anotacao.materia;
+      document.getElementById('anotacaoTitulo').value = anotacao.titulo;
+      document.getElementById('anotacaoConteudo').value = anotacao.conteudo;
+
+      // Atualiza o botão de submit
+      const form = document.getElementById('anotacaoForm');
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.innerHTML = '<i class="bi bi-save"></i> Salvar Alterações';
+      
+      // Remove o evento de submit anterior
+      const newForm = form.cloneNode(true);
+      form.parentNode.replaceChild(newForm, form);
+      
+      // Adiciona o novo evento de submit
+      newForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Atualiza a anotação
+        anotacoes[index] = {
+          materia: document.getElementById('anotacaoMateria').value,
+          titulo: document.getElementById('anotacaoTitulo').value,
+          conteudo: document.getElementById('anotacaoConteudo').value,
+          data: anotacao.data // Mantém a data original
+        };
+
+        // Salva no localStorage
+        localStorage.setItem('anotacoes', JSON.stringify(anotacoes));
+        
+        // Limpa o formulário
+        newForm.reset();
+        
+        // Restaura o botão original
+        submitButton.innerHTML = '<i class="bi bi-save"></i> Salvar Anotação';
+        
+        // Atualiza a lista
+        carregarAnotacoes();
+        
+        // Feedback visual
+        showToast('Anotação atualizada com sucesso!', 'success');
       });
     }
 
@@ -2369,7 +2488,7 @@
         'video': '#0d6efd',
         'questoes': '#198754',
         'revisao': '#ffc107',
-        'revisao_questoes': '#0dcaf0'
+        'leitura': '#0dcaf0'
       };
       return cores[tipo] || '#6c757d';
     }
@@ -2429,7 +2548,7 @@
         'video': 'Vídeo Aula',
         'questoes': 'Questões',
         'revisao': 'Revisão',
-        'revisao_questoes': 'Revisão por Questões'
+        'leitura': 'Leitura'
       };
       return tipos[tipo] || tipo;
     }
@@ -2767,6 +2886,28 @@
         icon: type,
         title: message
       });
+    }
+
+    // Adicione estas funções no bloco de script
+    function aplicarFiltrosGrafico() {
+      const tipoEstudo = document.getElementById('filtroTipoEstudo').value;
+      const periodo = document.getElementById('filtroPeriodo').value;
+      
+      let dadosFiltrados = [...chartData];
+      
+      // Filtra por tipo de estudo
+      if (tipoEstudo !== 'todos') {
+        dadosFiltrados = dadosFiltrados.filter(estudo => estudo.tipo === tipoEstudo);
+      }
+      
+      // Filtra por período
+      if (periodo !== 'todos') {
+        const dataLimite = new Date();
+        dataLimite.setDate(dataLimite.getDate() - parseInt(periodo));
+        dadosFiltrados = dadosFiltrados.filter(estudo => new Date(estudo.data) >= dataLimite);
+      }
+      
+      atualizarGrafico(dadosFiltrados);
     }
   </script>
 </body>
