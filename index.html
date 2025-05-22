@@ -14,6 +14,7 @@
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales-all.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     /* Estilos existentes */
     .sidebar {
@@ -892,6 +893,55 @@
 
     [data-theme="dark"] input[type="date"] {
       color-scheme: dark;
+    }
+
+    /* Estilos para o Markdown */
+    .markdown-content {
+      line-height: 1.6;
+    }
+    .markdown-content h1,
+    .markdown-content h2,
+    .markdown-content h3,
+    .markdown-content h4,
+    .markdown-content h5,
+    .markdown-content h6 {
+      margin-top: 1em;
+      margin-bottom: 0.5em;
+    }
+    .markdown-content p {
+      margin-bottom: 1em;
+    }
+    .markdown-content ul,
+    .markdown-content ol {
+      margin-bottom: 1em;
+      padding-left: 2em;
+    }
+    .markdown-content code {
+      background-color: rgba(0, 0, 0, 0.1);
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+    }
+    .markdown-content pre {
+      background-color: rgba(0, 0, 0, 0.1);
+      padding: 1em;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    .markdown-content blockquote {
+      border-left: 4px solid #ccc;
+      margin: 0;
+      padding-left: 1em;
+      color: #666;
+    }
+    [data-theme="dark"] .markdown-content code {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    [data-theme="dark"] .markdown-content pre {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    [data-theme="dark"] .markdown-content blockquote {
+      border-left-color: #666;
+      color: #999;
     }
   </style>
 </head>
@@ -1921,7 +1971,7 @@
 
       // Atualiza o filtro de matérias
       const materias = [...new Set(anotacoes.map(a => a.materia))].sort();
-      const materiaAtual = filtroMateria.value; // Guarda a matéria selecionada
+      const materiaAtual = filtroMateria.value;
       
       filtroMateria.innerHTML = '<option value="">Todas as matérias</option>';
       materias.forEach(materia => {
@@ -1938,24 +1988,20 @@
       const materiaSelecionada = filtroMateria.value;
       const textoBusca = buscaTitulo.value.toLowerCase().trim();
       
-      let anotacoesFiltradas = [...anotacoes]; // Cria uma cópia do array
+      let anotacoesFiltradas = [...anotacoes];
       
-      // Aplica filtro de matéria
       if (materiaSelecionada) {
         anotacoesFiltradas = anotacoesFiltradas.filter(a => a.materia === materiaSelecionada);
       }
       
-      // Aplica filtro de título
       if (textoBusca) {
         anotacoesFiltradas = anotacoesFiltradas.filter(a => 
           a.titulo.toLowerCase().includes(textoBusca)
         );
       }
 
-      // Ordena por data mais recente
       anotacoesFiltradas.sort((a, b) => new Date(b.data) - new Date(a.data));
 
-      // Limpa e preenche a lista
       listaAnotacoes.innerHTML = '';
       
       if (anotacoesFiltradas.length === 0) {
@@ -1975,7 +2021,7 @@
             <small class="text-muted">${formatarData(anotacao.data)}</small>
           </div>
           <p class="mb-1 text-primary">${anotacao.materia}</p>
-          <p class="mb-1">${anotacao.conteudo}</p>
+          <div class="mb-3 markdown-content">${marked.parse(anotacao.conteudo)}</div>
           <div class="d-flex justify-content-end">
             <button class="btn btn-outline-primary btn-sm me-2" onclick="editarAnotacao(${index})">
               <i class="bi bi-pencil"></i>
@@ -2076,7 +2122,7 @@
       newForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Atualiza a anotação
+        // Atualiza a anotação existente
         anotacoes[index] = {
           materia: document.getElementById('anotacaoMateria').value,
           titulo: document.getElementById('anotacaoTitulo').value,
